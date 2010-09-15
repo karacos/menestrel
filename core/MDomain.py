@@ -150,7 +150,7 @@ class MDomain(karacos.db['Domain']):
         if result['status'] != 'failure':
             user = self.get_user_by_name(email)
             karacos.serving.get_session().set_user(user)
-            raise karacos.http.DataRequired("Create password","","/%s?method=create_password"%self._get_action_url(),self,self.create_password)
+            raise karacos.http.DataRequired(self,self.create_password)
             
         else: #result['status'] == 'failure'
             
@@ -249,7 +249,7 @@ class MDomain(karacos.db['Domain']):
                     self._get_everyone_group().add_user(user)
                     user = self.get_user_by_name(email)
                     personData = {'name':'personData'}
-                    KaraCos.Db.Person.create(user=user, base=None,data=personData)
+                    karacos.db['Person'].create(user=user, base=None,data=personData)
                     self.send_validation(user)
                     return {'status':'success',
                             'message' : _('Enregistrement reussi'), 'data': user }

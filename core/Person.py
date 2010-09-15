@@ -11,24 +11,24 @@ Created on 13 janv. 2010
 @author: nico
 '''
 
-import KaraCos
-_ = KaraCos._
-class Person(KaraCos.Db.Node):
+import karacos
+
+class Person(karacos.db['Node']):
     '''
     Object used to store person relative data (personal info, address, etc...)
     '''
 
 
     def __init__(self,parent=None,base=None,data=None):
-        assert isinstance(parent,KaraCos.Db.User), "parent must be of type User"
-        KaraCos.Db.Node.__init__(self,parent=parent,base=base,data=data)
+        assert isinstance(parent,karacos.db['User']), "parent must be of type User"
+        karacos.db['Node'].__init__(self,parent=parent,base=base,data=data)
 
     @staticmethod
-    def create(user=None, base=None,data=None,owner=None):
+    def create(user=None, base=None,data=None):
         assert isinstance(data,dict)
-        assert isinstance(user, KaraCos.Db.User)
+        assert isinstance(user, karacos.db['User'])
         if 'WebType' not in data:
             data['WebType'] = 'Person'
         if 'type' not in data:
             data['type'] = 'Person'
-        return KaraCos.Db.WebNode.create(parent=user,base=base,data=data,owner=user)
+        return karacos.db['Node'].create(parent=user,base=base,data=data)

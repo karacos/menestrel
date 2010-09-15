@@ -6,7 +6,7 @@ abstraction layer for couchdb
 import karacos
 from Resource import Resource
 from MDomain import MDomain
-#from Person import Person
+from Person import Person
 #from Profile import Profile
 #from Comment import Comment
 #from EntriesHolder import EntriesHolder
