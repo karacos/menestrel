@@ -17,12 +17,12 @@ class Resource(karacos.db['WebNode']):
         karacos.db['WebNode'].__init__(self,parent=parent,base=base,data=data)
 
     @staticmethod
-    def create(parent=None, base=None,data=None,owner=None):
+    def create(parent=None, base=None,data=None):
         assert isinstance(data,dict)
-        assert isinstance(parent.__domain__,KaraCos.Db.MDomain)
+        assert isinstance(parent.__domain__,karacos.db['MDomain'])
         if 'WebType' not in data:
             data['WebType'] = 'Resource'
-        return karacos.db['WebNode'].create(parent=parent,base=base,data=data,owner=owner)
+        return karacos.db['WebNode'].create(parent=parent,base=base,data=data)
     
     @karacos._db.ViewsProcessor.isview('self','javascript')
     def __get_comments__(self):

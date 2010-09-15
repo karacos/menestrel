@@ -11,7 +11,6 @@ from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
 from email.MIMEImage import MIMEImage
 import os, sys
-import cherrypy
 import karacos
 from mako.template import Template
 from uuid import uuid4
@@ -60,30 +59,31 @@ class MDomain(karacos.db['Domain']):
                 KaraCos.Db.sysdb.put_attachment(self, tidyzip.read(), 'multiflex37.zip')#, 'image/png')
         self._update_item()
         """ 
-    def _get_user_profiles_node(self):
-        if '__user_profiles__' not in dir(self):
-            self._update_item()
-            if self['KC_M_user_profiles_node_name'] not in self.__childrens__:
-                owner = KaraCos._Auth.objects.DummyUser('system')
-                profiles = KaraCos.Db.Resource.create(base=None, parent=self,data={'name':self['KC_M_user_profiles_node_name']},owner=owner)
-                profiles['ACL']['groups.everyone@%s' % self['name']] = ['index','get_user_actions_forms','w_browse']
-                profiles['ACL']['user.admin@%s' % self['name']].remove('rename')
-            
-            self.__user_profiles__ = self.__childrens__[self['KC_M_user_profiles_node_name']]
-        return self.__user_profiles__
         
     @staticmethod
     def create(parent=None, base=None,data=None):
         assert isinstance(data,dict)
-        templatepath = os.path.join(KaraCos.Apps['menestrel'].__path__[0],'interfaces','templates')
+        templatepath = os.path.join(karacos.apps['menestrel'].__path__[0],'resources','templates')
         if 'templatesdirs' in data:
             data['templatesdirs'].append(templatepath)
         data['templatesdirs'] = [templatepath]
         if 'WebType' not in data:
             data['WebType'] = 'MDomain'
-        result = KaraCos.Db.Domain.create(base=base,data=data)
+        result = karacos.db['Domain'].create(base=base,data=data)
         result.log.info("create domain : %s" % result)
         return result
+
+    
+    def _get_user_profiles_node(self):
+        if '__user_profiles__' not in dir(self):
+            self._update_item()
+            if self['KC_M_user_profiles_node_name'] not in self.__childrens__:
+                profiles = karacos.db['Resource'].create(base=None, parent=self,data={'name':self['KC_M_user_profiles_node_name']})
+                profiles['ACL']['groups.everyone@%s' % self['name']] = ['index','get_user_actions_forms','w_browse']
+                profiles['ACL']['user.admin@%s' % self['name']].remove('rename')
+            
+            self.__user_profiles__ = self.__childrens__[self['KC_M_user_profiles_node_name']]
+        return self.__user_profiles__
     
     def _get_login_form(self):
         """
@@ -99,19 +99,19 @@ class MDomain(karacos.db['Domain']):
         },]
         return result
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def login(self,*wargs, **kw):
         """
         """
         if 'register' in kw:
-            raise KaraCos.HTTPRedirect('/register',301)
+            raise karacos.http.Redirect('/register',301)
         assert 'email' in kw
         assert 'password' in kw
         user = None
         if True: # KaraCos._Core.mail.valid_email(email):
             try:
                 user = self.authenticate(kw['email'],kw['password'])
-            except KaraCos._Db.DbException, e:
+            except karacos._db.Exception, e:
                 
                 return {'status':'failure', 'message' : '%s' % e.parameter,
                         'errors': None }
@@ -125,14 +125,14 @@ class MDomain(karacos.db['Domain']):
     
     
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def register(self,email=None):
         """
         """
         result = self._register(email=email)
         if result['status'] =='success':
             ""
-        return KaraCos.json.dumps(result)
+        return karacos.json.dumps(result)
     register.form = {'title': _("S'enregister"),
          'submit': _('Valider'),
          'fields': [{'name':'email', 'title':'Addresse email','dataType': 'TEXT'}]
@@ -140,7 +140,7 @@ class MDomain(karacos.db['Domain']):
     register.label = _('S\'inscrire')
     
     #@KaraCos.expose()      ##### IDEE Ce decorator est a reecrire, il faut pouvoir ecrire comme un isaction dedans, c'est le decorator qui devra appeler le processor de templates en fnct de la requete
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def validate_user(self,email=None,validation=None):
         """
         Validate user account
@@ -149,19 +149,14 @@ class MDomain(karacos.db['Domain']):
         result =  self._validate_user(email,validation)
         if result['status'] != 'failure':
             user = self.get_user_by_name(email)
-            sessuserid = self.get_sessuserid()
-            cherrypy.session[sessuserid] = user['name']
-            # Quand me vient l'idee ci-dessus 5mn plus tot et que me survient le probleme ! ICI !, je ne sais plus quoi penser....
-            # Sans le decorator reecrit, pas de gestion correcte de cette exception et la ca pose probleme
-            # donc force est de constater que je doive encore toucher au noyau, ou modifier une certaine logique...
-            # Contournement possible : Donner l'autre decorator
-            raise KaraCos._Core.exception.DataRequired("Create password","","/%s?method=create_password"%self._get_action_url(),self,self.create_password)
+            karacos.serving.get_session().set_user(user)
+            raise karacos.http.DataRequired("Create password","","/%s?method=create_password"%self._get_action_url(),self,self.create_password)
             
         else: #result['status'] == 'failure'
             
             return result
 
-    @KaraCos.expose()      
+    @karacos._db.isaction
     def _unregister(self,email,validation):
         """
         """
@@ -169,7 +164,7 @@ class MDomain(karacos.db['Domain']):
         template = self.__domain__.lookup.get_template('/default/system')
         return template.render(instance=self,result=result['message'])
 
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def create_password(self,password,confirmation):
         """
         Creates user password
@@ -189,13 +184,13 @@ class MDomain(karacos.db['Domain']):
                     {'name':'confirmation', 'title':'Confirmez le mot de passe','dataType': 'PASSWORD'}]
         }
     create_password.label = _('Creation du mot de passe')
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def modify_person_data(self):
         """
         """
         pass
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def user_profile_exist(self,name):
         profilesParent = self.get_child_by_name('users')
         if profilesParent.child_exist(name):
@@ -205,7 +200,7 @@ class MDomain(karacos.db['Domain']):
             return {'status':'failure', 'message' : _("Profile n'existe pas"),
                         'errors': None }
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def rename_user_profiles_node(self,name):
         """
         """
@@ -213,10 +208,10 @@ class MDomain(karacos.db['Domain']):
         self._get_user_profiles_node()._rename(name)
         self['KC_M_user_profiles_node_name'] = name
         self.save()
-    rename_user_profiles_node.form = forms._forms['rename']
+    #rename_user_profiles_node.form = forms._forms['rename']
     rename_user_profiles_node.label = _("rename_user_profiles_node")
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def create_user_profile(self,type='Profile',name=None):
         """
         """
@@ -228,7 +223,7 @@ class MDomain(karacos.db['Domain']):
         profile = KaraCos.Db.Profile.create(parent=self._get_user_profiles_node(),data=data, person=person)
         profile['ACL']['group.everyone@%s' % self['name']] = ['get_comment_form','add_comment','w_browse','__get_actions']
         profile.save()
-    create_user_profile.form = forms._forms['create_profile']
+    #create_user_profile.form = forms._forms['create_profile']
     create_user_profile.label = _("Creer un profil")
     
     def _get_person_data(self):
@@ -244,7 +239,7 @@ class MDomain(karacos.db['Domain']):
         """
         """
         user = None
-        if KaraCos._Core.mail.valid_email(email):
+        if karacos.core.mail.valid_email(email):
             try:
                 user = None
                 if not self.user_exist(email):
@@ -254,15 +249,14 @@ class MDomain(karacos.db['Domain']):
                     self._get_everyone_group().add_user(user)
                     user = self.get_user_by_name(email)
                     personData = {'name':'personData'}
-                    owner = KaraCos._Auth.objects.DummyUser('system')
-                    KaraCos.Db.Person.create(user=user, base=None,data=personData,owner=owner)
+                    KaraCos.Db.Person.create(user=user, base=None,data=personData)
                     self.send_validation(user)
                     return {'status':'success',
                             'message' : _('Enregistrement reussi'), 'data': user }
                     
                 user = self.get_user_by_name(email)
                 if password != None:
-                    passwordhash = "%s" % KaraCos.Db.User.hash_pwd(password)
+                    passwordhash = "%s" % karacos.db['User'].hash_pwd(password)
                     if not user['password'] == passwordhash:
                         return {'status':'failure',
                                 'message' : _('Erreur, email connue mais mot de passe incorrect'),
@@ -270,16 +264,16 @@ class MDomain(karacos.db['Domain']):
                 if user.belongs_to(self._get_confirmed_group()):
                     ""
                     return {'status':'success',
-                            'message' : _('Email/mot de passe connus, user deja valid&eacute'),
+                            'message' : _('Email/mot de passe connus, user deja valid&eacute;'),
                          'data': user }
                 else:
                     #resend validation
                     ""
                     self.send_validation(user)
                     return {'status':'success',
-                            'message' : _('Email/mot de passe connus, user non vali&eacute, renvoi validation'),
+                            'message' : _('Email/mot de passe connus, user non valid&eacute, renvoi validation'),
                          'data': user }
-            except KaraCos._Db.DbException, e:
+            except karacos._db.Exception, e:
                 
                 return {'status':'failure', 'message' : '%s' % e.parameter,
                         'errors': None }
@@ -294,12 +288,12 @@ class MDomain(karacos.db['Domain']):
         """
         send the validation mail to user
         """
-        self.log.info("Sending validation to : %s" % user)
-        if not KaraCos._Core.mail.valid_email(user['name']):
+        if not karacos.core.mail.valid_email(user['name']):
             return False
         if 'validation' not in user:
             user['validation'] = "%s" % uuid4().hex
         user.save()
+        self.log.info("Sending validation to : %s with validation '%s'" % (user['name'], user['validation']))
         message = MIMEMultipart()
         message['From'] = self['mail_register_from_addr']
         message['To'] = user['name']
@@ -345,11 +339,10 @@ class MDomain(karacos.db['Domain']):
                 img_msg.add_header("Content-Disposition", "inline; filename=\"%s.%s\"" % (self['mail_confirm_attachements'][img], img_ext))
                 message.attach(img_msg)
 
-        
         message.attach(MIMEText(body, 'html'))
         self.log.debug("sending mail : %s,%s" % (user['name'],user['validation']))
         try:
-            KaraCos._Core.mail.send_mail(user['name'],message.as_string())
+            karacos.core.mail.send_mail(user['name'],message.as_string())
             self.log.info("mail successfully sent to %s" % user['name'])
         except:
             self.log.warn("error while sending mail to %s" % user['name'])
@@ -369,15 +362,14 @@ class MDomain(karacos.db['Domain']):
                 user['newsletter'] = False
                 user.save()
             
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def _simple_message(self,sender_name=None,sender_email=None,subject=None,message=None):
         """
         Creates a node in manager/messages
         """
-        owner = KaraCos._Auth.objects.DummyUser('system')
         if len(self._get_child_by_name('manager')) == 0:
-            KaraCos.Db.Manager.create(base=None, parent=self,
-                                      data={'name':'manager'},owner=owner)
+            karacos.db['Manager'].create(base=None, parent=self,
+                                      data={'name':'manager'})
         manager = self.get_child_by_name('manager')
         data = {'ref_db': self.base.id,
                 'ref_id': self.id,
@@ -403,7 +395,6 @@ class MDomain(karacos.db['Domain']):
             if user['validation'] == validation:
                 
                 if user.belongs_to(self._get_confirmed_group()):
-                    template = self.__domain__.lookup.get_template('/default/system')
                     return {'status':'error', 'message': _("Email deja validee"), 'data':{}}
                 else:
                     self._get_registered_group().remove_user(user)
