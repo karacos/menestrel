@@ -3,9 +3,9 @@ Created on 25 aout 2010
 
 @author: nico
 '''
-import KaraCos
-_ = KaraCos._
-class MDMessage(KaraCos.Db.WorkFlowItem):
+import karacos
+
+class MDMessage(karacos.db['WorkFlowItem']):
     '''
     WorkFlow item for messages in MDomain.
     This implementation carries data of message on itself
@@ -13,11 +13,11 @@ class MDMessage(KaraCos.Db.WorkFlowItem):
 
 
     def __init__(self,parent=None,base=None,data=None):
-        KaraCos.Db.WorkFlowItem.__init__(self,parent=parent,base=base,data=data)
+        karacos.db['WorkFlowItem'].__init__(self,parent=parent,base=base,data=data)
 
     @staticmethod
-    def create(parent=None, base=None,data=None,owner=None):
-        assert isinstance(parent.__domain__, KaraCos.Db.MDomain)
+    def create(parent=None, base=None,data=None):
+        assert isinstance(parent.__domain__, karacos.db['MDomain'])
         assert isinstance(data,dict)
         assert 'subject' in data
         assert 'message' in data
@@ -26,7 +26,7 @@ class MDMessage(KaraCos.Db.WorkFlowItem):
             data['type'] = 'MDMessage'
         if 'status' not in data:
             data['status'] = 'unread'
-        result = KaraCos.Db.WorkFlowItem.create(parent=parent,base=base,data=data,owner=owner)
+        result = karacos.db['WorkFlowItem'].create(parent=parent,base=base,data=data)
         return result
 
     def _get_validation_action(self):

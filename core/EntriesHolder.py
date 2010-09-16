@@ -1,7 +1,7 @@
 
-import KaraCos
+import karacos
 
-class EntriesHolder(KaraCos.Db.WebNode):
+class EntriesHolder(karacos.db['WebNode']):
     """
     Container type for Entries
     """

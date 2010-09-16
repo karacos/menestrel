@@ -1,35 +1,34 @@
 
 
-import KaraCos
-_ = KaraCos._
-class CommentWfItem(KaraCos.Db.WorkFlowItem):
+import karacos
+class CommentWfItem(karacos.db['WorkFlowItem']):
     """
     Handler for comment validation
     """
     
     def __init__(self,parent=None,base=None,data=None):
-        KaraCos.Db.WorkFlowItem.__init__(self,parent=parent,base=base,data=data)
-        base = KaraCos.Db.sysdb[data['ref_db']]
+        karacos.db['WorkFlowItem'].__init__(self,parent=parent,base=base,data=data)
+        base = karacos.db.sysdb[data['ref_db']]
         self.__comment__ = base.db[data['ref_id']]
         self.actions = {'validate': CommentWfItem.validate_comment,
                'moderate': CommentWfItem.moderate_comment,
                'delete': CommentWfItem.delete_comment}
         
     @staticmethod
-    def create(parent=None, base=None,data=None,owner=None):
-        assert isinstance(parent.__domain__, KaraCos.Db.MDomain)
+    def create(parent=None, base=None,data=None):
+        assert isinstance(parent.__domain__, karacos.db['MDomain'])
         assert isinstance(data,dict)
         assert 'ref_db' in data, "Workflow Item must ref item related container db"
         assert 'ref_id' in data, "Workflow Item must ref item related id"
-        base = KaraCos.Db.sysdb[data['ref_db']]
+        base = karacos.db.sysdb[data['ref_db']]
         comment = base.db[data['ref_id']]
-        assert isinstance(comment,KaraCos.Db.Comment)
+        assert isinstance(comment,karacos.db['Comment'])
         
         if 'type' not in data:
             data['type'] = 'CommentWfItem'
         if 'status' not in data:
             data['status'] = 'unread'
-        result = KaraCos.Db.WorkFlowItem.create(parent=parent,base=base,data=data,owner=owner)
+        result = karacos.db['WorkFlowItem'].create(parent=parent,base=base,data=data)
         return result
     
     def validate_comment(self):

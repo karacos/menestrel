@@ -8,29 +8,28 @@ from email.MIMEText import MIMEText
 from email.MIMEImage import MIMEImage
 from uuid import uuid4
 import sys
-import KaraCos
+import karacos
 #from anydbm import result
-_ = KaraCos._
-json = KaraCos.json
-class Newsletter(KaraCos.Db.EntriesHolder):
+json = karacos.json
+class Newsletter(karacos.db['EntriesHolder']):
     '''
     Newsletter resource
     '''
     
     def __init__(self,parent=None,base=None,data=None):
-        #assert isinstance(domain,KaraCos.Db.Domain), "domain in not type Domain"
-        KaraCos.Db.WebNode.__init__(self,parent=parent,base=base,data=data)
+        #assert isinstance(domain,karacos.db['Domain']), "domain in not type Domain"
+        karacos.db['WebNode'].__init__(self,parent=parent,base=base,data=data)
 
     @staticmethod
-    def create(parent=None, base=None,data=None,owner=None):
+    def create(parent=None, base=None,data=None):
         assert isinstance(data,dict)
         if 'WebType' not in data:
             data['WebType'] = 'Newsletter'
         if 'mail_register_from_addr' not in data:
             data['mail_register_from_addr'] = ''
-        return KaraCos.Db.WebNode.create(parent=parent,base=base,data=data,owner=owner)
+        return karacos.db['WebNode'].create(parent=parent,base=base,data=data)
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def publish_node(self):
         """
         overrides WebNode default
@@ -47,7 +46,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
         return self.__subscribers__
     
     def _subscribe(self,email=None):
-        if KaraCos._Core.mail.valid_email(email):
+        if karacos.core.mail.valid_email(email):
             if email not in self._get_subscribers_node().__childrens__:
                 subscriber = {'name': email,
                               'newsletter': False,
@@ -78,7 +77,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
             return {'status':'failure', 'message':_('Adresse invalide'),
                     'errors':{'email':_('This is not a valid mail address')}}
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def subscribe(self,email=None):
         """
         #TODO : si user connecte, argument outionnel
@@ -94,7 +93,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
     subscribe.label = _('S\'inscrire a la Newsletter')
 
 
-    @KaraCos.expose()
+    @karacos._db.isaction
     def _validate(self,email=None,validation=None):
         """
         Validate email for newsletter
@@ -107,7 +106,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
         """
         Newsletter only validation
         """
-        if KaraCos._Core.mail.valid_email(email):
+        if karacos.core.mail.valid_email(email):
             if email in self._get_subscribers_node().__childrens__:
                 user = self._get_subscribers_node().__childrens__[email]
                 if 'validation' in user and user['validation'] == validation:
@@ -133,7 +132,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
                  ] }
         return form
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def create_message(self,*args,**kw):
         """
         Create a newsletter message
@@ -150,7 +149,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
         """
         
     
-    @KaraCos._Db.ViewsProcessor.isview('self','javascript')
+    @karacos._db.ViewsProcessor.isview('self','javascript')
     def __get_subscribers_list__(self,subscribers_id):
         """
         // %s
@@ -160,7 +159,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
             }
         """
     
-    @KaraCos._Db.ViewsProcessor.isview('self','javascript')
+    @karacos._db.ViewsProcessor.isview('self','javascript')
     def __get_public_entries__(self):
         """
         //
@@ -172,7 +171,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
             }
         """
     
-    @KaraCos._Db.ViewsProcessor.isview('self','javascript')
+    @karacos._db.ViewsProcessor.isview('self','javascript')
     def __get_public_entries_values__(self):
         """
         //
@@ -184,7 +183,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
             }
         """
         
-    @KaraCos._Db.ViewsProcessor.isview('self','javascript')
+    @karacos._db.ViewsProcessor.isview('self','javascript')
     def __get_editing_entries__(self):
         """
         //
@@ -197,7 +196,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
                   }
             }
         """
-    @KaraCos._Db.ViewsProcessor.isview('self','javascript')
+    @karacos._db.ViewsProcessor.isview('self','javascript')
     def __get_entries__(self):
         """
         //
@@ -207,7 +206,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
             }
         """
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def view_subscribers(self):
         """
         Return a list of newsletter subscribers
@@ -236,7 +235,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
                 result.append(self.db[item.value])
         return result
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def view_last_entries(self,number=5):
         """
         Return a list of newsletter subscribers
@@ -274,7 +273,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
                     {'name':'unregister_first_block', 'title':_('UNREGISTER message premier bloc'),'dataType': 'TEXT','formType': 'WYSIWYG', 'value': self['unregister_first_block']},
                  ] }
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def _options(self,*args,**kwds):
         assert 'mail_register_from_addr' in kwds
         assert 'confirm_first_block' in kwds
@@ -294,7 +293,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
         """
         send given mail message to given user
         """
-        if not KaraCos._Core.mail.valid_email(user['name']):
+        if not karacos.core.mail.valid_email(user['name']):
             return False
         if 'validation' not in user:
             user['validation'] = "%s" % uuid4().hex
@@ -319,8 +318,8 @@ class Newsletter(KaraCos.Db.EntriesHolder):
         else:
             template = Template(self['mail_template_%s' % message_name])
         body = template.render(instance=self,user=user)
-        if 'mail_confirm_attachements' in self:
-            for img in self['mail_confirm_attachements'].keys():
+        #if 'mail_confirm_attachements' in self:
+            #for img in self['mail_confirm_attachements'].keys():
                 # 
                 #images = {'TraiderZicLogo.png':"TzLogoPng@11111",
                 #  'TraiderZicLogo.gif':"TzLogoGif@11112",
@@ -329,33 +328,33 @@ class Newsletter(KaraCos.Db.EntriesHolder):
                 #  'fond_site_traderzic.png':"TzBackGroud@11115",
                 #          }
                 
-                img_location = os.path.join(KaraCos.Apps['traderzic'].__path__[0],'interfaces','war','public',img)
-                img_content=file(img_location, "rb").read()
-                img_msg=MIMEImage(img_content)
-                img_type, img_ext=img_msg["Content-Type"].split("/")
+                #img_location = os.path.join(karacos.apps['traderzic'].__path__[0],'interfaces','war','public',img)
+                #img_content=file(img_location, "rb").read()
+                #img_msg=MIMEImage(img_content)
+                #img_type, img_ext=img_msg["Content-Type"].split("/")
         
-                del img_msg["MIME-Version"]
-                del img_msg["Content-Type"]
-                del img_msg["Content-Transfer-Encoding"]
+                #del img_msg["MIME-Version"]
+                #del img_msg["Content-Type"]
+                #del img_msg["Content-Transfer-Encoding"]
         
-                img_msg.add_header("Content-Type", "%s/%s; name=\"%s.%s\"" % (img_type, img_ext, self['mail_confirm_attachements'][img], img_ext))
-                img_msg.add_header("Content-Transfer-Encoding", "base64")
-                img_msg.add_header("Content-ID", "<%s>" % self['mail_confirm_attachements'][img])
-                img_msg.add_header("Content-Disposition", "inline; filename=\"%s.%s\"" % (self['mail_confirm_attachements'][img], img_ext))
-                message.attach(img_msg)
+                #img_msg.add_header("Content-Type", "%s/%s; name=\"%s.%s\"" % (img_type, img_ext, self['mail_confirm_attachements'][img], img_ext))
+                #img_msg.add_header("Content-Transfer-Encoding", "base64")
+                #img_msg.add_header("Content-ID", "<%s>" % self['mail_confirm_attachements'][img])
+                #img_msg.add_header("Content-Disposition", "inline; filename=\"%s.%s\"" % (self['mail_confirm_attachements'][img], img_ext))
+                #message.attach(img_msg)
 
         
         message.attach(MIMEText(body, 'html'))
         self.log.debug("sending mail : %s,%s" % (user['name'],user['validation']))
         try:
-            KaraCos._Core.mail.send_mail(user['name'],message.as_string())
+            karacos.core.mail.send_mail(user['name'],message.as_string())
             self.log.info("mail successfully sent to %s" % user['name'])
         except:
             self.log.warn("error while sending mail to %s" % user['name'])
             self.log.log_exc( sys.exc_info(),'warn')
         return True
     
-    @KaraCos.expose
+    @karacos._db.isaction
     def _unregister(self,email=None,validation=None):
         """
         Validate email for newsletter
@@ -369,7 +368,7 @@ class Newsletter(KaraCos.Db.EntriesHolder):
         """
         Unregister from newsletter
         """
-        if KaraCos._Core.mail.valid_email(email):
+        if karacos.core.mail.valid_email(email):
             if email in self._get_subscribers_node().__childrens__:
                 subscriber = self._get_subscribers_node().__childrens__[email]
                 if validation == None: # S'il n'y a pas de chaine de validation, on envoie un mail pour la desinscription

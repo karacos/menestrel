@@ -17,13 +17,13 @@ class Comment(karacos.db['Resource']):
         karacos.db['Resource'].__init__(self,parent=parent,base=base,data=data)
 
     @staticmethod
-    def create(parent=None, base=None,data=None,owner=None):
+    def create(parent=None, base=None,data=None):
         assert isinstance(data,dict)
         if 'status' not in data:
             data['status'] = 'public'
         if 'WebType' not in data:
             data['WebType'] = 'Comment'
-        result = karacos.db['Resource'].create(parent=parent,base=base,data=data,owner=owner)
+        result = karacos.db['Resource'].create(parent=parent,base=base,data=data)
         staffgrpname = 'group.staff@%s' % result.__domain__['name']
         if staffgrpname not in result['ACL']:
             result['ACL'][staffgrpname] = []
@@ -72,7 +72,7 @@ class Comment(karacos.db['Resource']):
         wfitem = self.__get_workflow_item__()
         wfitem._update_item()
         if wfitem:
-            assert isinstance(wfitem,KaraCos.Db.CommentWfItem)
+            assert isinstance(wfitem,karacos.db['CommentWfItem'])
             wfitem['status'] = 'read'
             wfitem['active'] = False
             if 'log' not in wfitem:

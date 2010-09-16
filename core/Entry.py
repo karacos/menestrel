@@ -4,26 +4,25 @@ Created on 13 janv. 2010
 @author: nico
 '''
 
-import KaraCos
-_ = KaraCos._
-class Entry(KaraCos.Db.Resource):
+import karacos
+class Entry(karacos.db['Resource']):
     '''
     Basic Entry resource
     '''
 
 
     def __init__(self,parent=None,base=None,data=None,domain=None):
-        assert isinstance(parent,KaraCos.Db.EntriesHolder), "parent in not type EntriesHolder"
-        KaraCos.Db.Resource.__init__(self,parent=parent,base=base,data=data)
+        assert isinstance(parent,karacos.db['EntriesHolder']), "parent in not type EntriesHolder"
+        karacos.db['Resource'].__init__(self,parent=parent,base=base,data=data)
         if 'status' not in self:
             self['status'] = 'edition'
         
     @staticmethod
-    def create(parent=None, base=None,data=None,owner=None):
+    def create(parent=None, base=None,data=None):
         assert isinstance(data,dict)
         if 'WebType' not in data:
             data['WebType'] = 'Entry'
-        result = KaraCos.Db.Resource.create(parent=parent,base=base,data=data,owner=owner)
+        result = karacos.db['Resource'].create(parent=parent,base=base,data=data)
         result.log.info("Create for me ok")
         if 'group.staff@%s' % result.__domain__['name'] not in result['ACL']:
             result['ACL']['group.staff@%s' % result.__domain__['name']] = []
@@ -49,7 +48,7 @@ class Entry(KaraCos.Db.Resource):
         
         return form
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def edit_content(self,title=None,message=None):
         """
         Basic content modification for entry
@@ -62,11 +61,11 @@ class Entry(KaraCos.Db.Resource):
     edit_content.get_form = _get_edit_content_form
     edit_content.label = _('Modifier le message')
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def publish(self):
         """
         """
-        KaraCos.Db.WebNode._publish_node(self)
+        karacos.db['WebNode']._publish_node(self)
         self['status'] = "published"
         everyone = 'group.everyone@%s' % self.__domain__['name']
         self['ACL'][everyone] = ["get_user_actions_forms","w_browse","index","add_comment","get_comments"]

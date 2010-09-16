@@ -3,25 +3,24 @@ Created on 13 janv. 2010
 
 @author: nico
 '''
-import cherrypy
-import KaraCos
-_ = KaraCos._
-class Media(KaraCos.Db.Resource):
+import karacos
+
+class Media(karacos.db['Resource']):
     '''
     Basic resource
     '''
     def __init__(self,parent=None,base=None,data=None):
-        assert isinstance(parent.__domain__,KaraCos.Db.MDomain), "domain in not type TzDomain"
-        KaraCos.Db.Resource.__init__(self,parent=parent,base=base,data=data)
+        assert isinstance(parent.__domain__,karacos.db['MDomain']), "domain in not type TzDomain"
+        karacos.db['Resource'].__init__(self,parent=parent,base=base,data=data)
 
     @staticmethod
-    def create(parent=None, base=None,data=None,owner=None):
+    def create(parent=None, base=None,data=None):
         assert isinstance(data,dict)
         if 'WebType' not in data:
             data['WebType'] = 'Media'
-        return KaraCos.Db.Resource.create(parent=parent,base=base,data=data,owner=owner)
+        return karacos.db['Resource'].create(parent=parent,base=base,data=data)
     
-    @KaraCos._Db.isaction
+    @karacos._db.isaction
     def add_media_file(self, att_file=None):
         #att_file.filename = "media"
         if '__media_name__' in self:
@@ -32,22 +31,22 @@ class Media(KaraCos.Db.Resource):
         self.__media_name__ = self['media']
         #return result
     
-    @KaraCos.expose
+    @karacos._db.isaction
     def _media(self):
         if '__media_name__' not in self.__dict__:
             if 'media' not in self:
-                raise cherrypy.HTTPError(status=404,message=_("Ressource introuvable"))
+                raise karacos.http.NotFound(message=_("Ressource introuvable"))
             else:
                 self.__media_name__ = self['media']
         if '_attachments' in self:
             if self.__media_name__ in self['_attachments']:
-                res = self.parent.db.get_attachment(self.id, self.__media_name__)
-                response = cherrypy.response
+                res = self.__parent__.db.get_attachment(self.id, self.__media_name__)
+                response = karacos.serving.get_response()
                 response.headers['Content-Type'] = self['_attachments'][self.__media_name__]['content_type']
                 response.headers['Content-Length'] = self['_attachments'][self.__media_name__]['length']
-                response.body = res
-                return response.body
-        raise cherrypy.HTTPError(status=404,message=_("Ressource introuvable"))
+                response.body = "%s" % res.read()
+                return
+        raise karacos.http.NotFound(message=_("Ressource introuvable"))
         
         
     add_media_file.form = {'title': _("Add media file"),

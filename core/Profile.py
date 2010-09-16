@@ -4,26 +4,26 @@ Created on 13 janv. 2010
 @author: nico
 '''
 
-import KaraCos
+import karacos
 
-class Profile(KaraCos.Db.Resource):
+class Profile(karacos.db['Resource']):
     '''
     Basic profile for lambda user
     '''
 
 
     def __init__(self,parent=None,base=None,data=None):
-        KaraCos.Db.Resource.__init__(self,parent=parent,base=base,data=data)
+        karacos.db['Resource'].__init__(self,parent=parent,base=base,data=data)
         
 
     @staticmethod
-    def create(parent=None, base=None,data=None, owner=None):
+    def create(parent=None, base=None,data=None):
         assert isinstance(data,dict)
-        assert isinstance(parent.__domain__, KaraCos.Db.MDomain)
+        assert isinstance(parent.__domain__, karacos.db['MDomain'])
         #assert isinstance(person, KaraCos.Db.Person)
         if 'WebType' not in data:
             data['WebType'] = 'Profile'
         #data['person_id'] = person.id
         #data['person_db'] = person.parent.base.id
-        return KaraCos.Db.Resource.create(parent=parent,base=base,data=data,owner=owner)#person.parent)
+        return karacos.db['Resource'].create(parent=parent,base=base,data=data)#person.parent)
     
