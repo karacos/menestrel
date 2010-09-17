@@ -3,7 +3,7 @@ Created on 13 janv. 2010
 
 @author: nico
 '''
-import cherrypy, sys
+import sys
 import karacos
 
 class Resource(karacos.db['WebNode']):
@@ -43,7 +43,6 @@ class Resource(karacos.db['WebNode']):
             childs = self.__get_comments__()
             for child in childs:
                     
-#                    KaraCos._Db.log.debug("get_child_by_name : db.key = %s db.value = %s" % (child.key,domain.value) )
                 result[child.value['creation_date']] = {'name':child.value['name'],
                                      'pseudo':child.value['pseudo'],
                                      'comment':child.value['comment'],
@@ -56,7 +55,6 @@ class Resource(karacos.db['WebNode']):
                     result[child.value['creation_date']]['email'] = child.value['email']
         except Exception, e:
             self.log.log_exc(sys.exc_info(),'warn')
-            #raise KaraCos._Db.DbException, e
         return result
     
     @karacos._db.isaction
@@ -69,22 +67,8 @@ class Resource(karacos.db['WebNode']):
     
     @karacos._db.isaction
     def get_comment_action(self):
-        assert 'session' in dir(cherrypy)
-        assert self.__domain__.get_sessuserid() in cherrypy.session
-        fieldlist = []
-        if self.__domain__.get_user_auth()['name'] == self.__domain__._get_anonymous_user()['name']:
-            fieldlist.append(fields._pseudoField)
-            fieldlist.append(fields._emailField)
-        fieldlist.append(fields._titleField)
-        fieldlist.append(fields._commentField)
-        
-        acturl = ""
-        if isinstance(self, KaraCos.Db.Domain):
-            acturl = "/"
-        else:
-            acturl = '/%s/' % self.get_relative_uri()
-        return {'label': _("Commenter"), 'action':'add_comment', 'acturl':acturl,
-          'form':{'fields': fieldlist, 'submit': _('Commenter'), 'title': _("Ajouter un commentaire") } }
+        return {'label': _("Commenter"), 'action':'add_comment', 'acturl':self.get_relative_uri(),
+          'form': self._add_comment_form() }
     
     
     
@@ -93,11 +77,10 @@ class Resource(karacos.db['WebNode']):
         self.__domain__._update_item()
         try:
             message = ""
-            assert 'session' in dir(cherrypy)
             if self.__domain__.get_user_auth()['name'] == self.__domain__._get_anonymous_user()['name']:
                 assert len(kw) == 4, "Invalid argument count"
                 assert 'email' in kw
-                if not KaraCos._Core.mail.valid_email(kw['email']):
+                if not karacos.core.mail.valid_email(kw['email']):
                     return {'status': 'error','message': 'Email incorrect', 'error': {'email':'Incorrect'}}
                 # TODO: validation du email quand comment
                 kw['status'] = "to_validate" # Anonymous comment is moderated "a priori"
@@ -105,13 +88,11 @@ class Resource(karacos.db['WebNode']):
             else: # user is authenticated
                 message = "Commentaire enregistre, et publie"
                 assert len(kw) == 1
-            self.log.info("%s" % len(kw))
-            self.log.info(dir(cherrypy.session))
-            assert self.__domain__.get_sessuserid() in cherrypy.session
+            self.log.debug("add_comment keywords : %s" % len(kw))
             assert 'comment' in kw
             #assert 'title' in kw
             kw['name'] = 'CMT%s' % len(self.__childrens__.keys())
-            kw['ip'] = cherrypy.request.wsgi_environ.get('HTTP_X_FORWARDED_FOR')
+            kw['ip'] = karacos.serving.get_request().remote_addr
             if 'pseudo' not in kw:
                 user = self.__domain__.get_user_auth()
                 if 'pseudo' not in user:
@@ -135,20 +116,12 @@ class Resource(karacos.db['WebNode']):
     add_comment.label = _("Commenter")
     
     def _add_comment_form(self):
-        assert 'session' in dir(cherrypy)
-        assert self.__domain__.get_sessuserid() in cherrypy.session
         fieldlist = []
-        if self.__domain__.get_user_auth()['name'] == self.__domain__._get_anonymous_user()['name']:
-            fieldlist.append(fields._pseudoField)
-            fieldlist.append(fields._emailField)
+        if not karacos.serving.get_session().is_authenticated():
+            fieldlist.append({'name':'pseudo', 'title':_('Pseudonyme'), 'dataType': 'TEXT'})
+            fieldlist.append({'name':'email', 'title':_("Email (ne sera pas publiee)"), 'dataType': 'TEXT'})
             fieldlist.append({'name':'website', 'title':_('Site web (facultatif)'), 'dataType': 'TEXT'})
-        #fieldlist.append(fields._titleField)
-        fieldlist.append(fields._commentField)
-        acturl = ""
-        if isinstance(self, KaraCos.Db.Domain):
-            acturl = "/"
-        else:
-            acturl = '/%s/' % self.get_relative_uri()
+        fieldlist.append({'name':'comment', 'title':_('Commentaire'), 'dataType': 'TEXT', 'formType': 'TEXTAREA'})
         return {'fields': fieldlist, 'submit': _('Commenter'), 'title': _("Ajouter un commentaire") }
         
     add_comment.get_form = _add_comment_form      
@@ -191,7 +164,7 @@ class Resource(karacos.db['WebNode']):
         form = {'title':'Modifier le contenu de la page',
                 'submit':'Modifier',
                 'fields':[
-                    {'name': 'stylesheets','title':_('Feuilles de style'),'dataType': 'TEXT', 'formType': 'TEXTAREA','value': KaraCos.json.dumps(self['stylesheets'])},
+                    {'name': 'stylesheets','title':_('Feuilles de style'),'dataType': 'TEXT', 'formType': 'TEXTAREA','value': karacos.json.dumps(self['stylesheets'])},
                     {'name':'title', 'title':_('Titre'), 'dataType': 'TEXT', 'value': self['title']},
                     {'name': 'keywords','title':_('Mots clef SEO'),'dataType': 'TEXT','value': self['keywords']},
                     {'name': 'description','title':_('Description SEO'),'dataType': 'TEXT', 'formType': 'TEXTAREA','value': self['description']},
@@ -212,7 +185,7 @@ class Resource(karacos.db['WebNode']):
         self['description'] = description
         self['keywords'] = keywords
         assert isinstance(stylesheets,basestring)
-        self['stylesheets'] = KaraCos.json.loads(stylesheets)
+        self['stylesheets'] = karacos.json.loads(stylesheets)
         self.save()
         return {'status':'success', 'message':_("Contenu modifi&eacute;"),'data':{}}
     edit_content.get_form = _get_edit_resource_content_form
@@ -220,9 +193,10 @@ class Resource(karacos.db['WebNode']):
     
     @karacos._db.isaction
     def publish_node(self):
-        KaraCos.Db.WebNode._publish_node(self)
+        karacos.db['WebNode']._publish_node(self)
         self['ACL']['group.everyone@%s' % self.__domain__['name']].append("add_comment")
         self.save()
+        
     def _add_semantic_tag(self,tag_name=None):
         """
         Semantic Tags for resource, it's meaning

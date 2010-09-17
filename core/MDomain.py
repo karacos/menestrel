@@ -231,7 +231,7 @@ class MDomain(karacos.db['Domain']):
         assert user['name'] != self.__domain__._get_anonymous_user()['name']
         if 'personData' not in user.__childrens__:
             personData = {'name':'personData'}
-            KaraCos.Db.Person.create(user=user, base=None,data=personData)
+            karacos.db['Person'].create(user=user, base=None,data=personData)
         return user.__childrens__['personData']
         
 
