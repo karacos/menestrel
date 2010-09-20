@@ -132,7 +132,7 @@ class MDomain(karacos.db['Domain']):
         result = self._register(email=email)
         if result['status'] =='success':
             ""
-        return karacos.json.dumps(result)
+        return result
     register.form = {'title': _("S'enregister"),
          'submit': _('Valider'),
          'fields': [{'name':'email', 'title':'Addresse email','dataType': 'TEXT'}]
@@ -165,7 +165,7 @@ class MDomain(karacos.db['Domain']):
         return template.render(instance=self,result=result['message'])
 
     @karacos._db.isaction
-    def create_password(self,password,confirmation):
+    def create_password(self,password=None,confirmation=None):
         """
         Creates user password
         """
@@ -173,7 +173,7 @@ class MDomain(karacos.db['Domain']):
         assert password == confirmation, _("Erreur, les motes de passe ne correspondent pas")
         user = self.get_user_auth()
         #assert 'password' not in user
-        passwordhash = "%s" % KaraCos.Db.User.hash_pwd(password)
+        passwordhash = "%s" % karacos.db['User'].hash_pwd(password)
         user['password'] = passwordhash
         user.save()
         result = {'status':'success', 'message':_("Mot de passe modifi&eacute;"),'data':{}}
