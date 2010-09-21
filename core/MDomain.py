@@ -367,7 +367,7 @@ class MDomain(karacos.db['Domain']):
         """
         Creates a node in manager/messages
         """
-        if len(self._get_child_by_name('manager')) == 0:
+        if 'manager' not in self.__childrens__:
             karacos.db['Manager'].create(base=None, parent=self,
                                       data={'name':'manager'})
         manager = self.get_child_by_name('manager')
