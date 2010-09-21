@@ -27,8 +27,6 @@ class Person(karacos.db['Node']):
     def create(user=None, base=None,data=None):
         assert isinstance(data,dict)
         assert isinstance(user, karacos.db['User'])
-        if 'WebType' not in data:
-            data['WebType'] = 'Person'
         if 'type' not in data:
             data['type'] = 'Person'
         return karacos.db['Node'].create(parent=user,base=base,data=data)
