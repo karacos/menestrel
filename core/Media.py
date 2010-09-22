@@ -33,9 +33,9 @@ class Media(karacos.db['Resource']):
     
     @karacos._db.isaction
     def _media(self):
-        if '__media_name__' not in self.__dict__:
+        if '__media_name__' not in dir(self):
             if 'media' not in self:
-                raise karacos.http.NotFound(message=_("Ressource introuvable"))
+                raise karacos.http.NotFound(message=_("Ressource 'Media' introuvable"))
             else:
                 self.__media_name__ = self['media']
         if '_attachments' in self:
@@ -46,7 +46,7 @@ class Media(karacos.db['Resource']):
                 response.headers['Content-Length'] = self['_attachments'][self.__media_name__]['length']
                 response.body = "%s" % res.read()
                 return
-        raise karacos.http.NotFound(message=_("Ressource introuvable"))
+        raise karacos.http.NotFound(message=_("Ressource introuvable, pas d'attachements"))
         
         
     add_media_file.form = {'title': _("Add media file"),
