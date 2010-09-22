@@ -23,8 +23,6 @@ class Media(karacos.db['Resource']):
     @karacos._db.isaction
     def add_media_file(self, att_file=None):
         #att_file.filename = "media"
-        if '__media_name__' in self:
-            self.parent.db.delete_attachment(self,self.__media_name__)
         result = self._add_attachment(att_file)
         self['media'] = att_file.filename
         self.save()
@@ -38,16 +36,7 @@ class Media(karacos.db['Resource']):
                 raise karacos.http.NotFound(message=_("Ressource 'Media' introuvable"))
             else:
                 self.__media_name__ = self['media']
-        if '_attachments' in self:
-            if self.__media_name__ in self['_attachments']:
-                res = self.__parent__.db.get_attachment(self.id, self.__media_name__)
-                response = karacos.serving.get_response()
-                response.headers['Content-Type'] = self['_attachments'][self.__media_name__]['content_type']
-                response.headers['Content-Length'] = self['_attachments'][self.__media_name__]['length']
-                response.body = "%s" % res.read()
-                return
-        raise karacos.http.NotFound(message=_("Ressource introuvable, pas d'attachements"))
-        
+        self._serve_att(self.__media_name__)
         
     add_media_file.form = {'title': _("Add media file"),
          'submit': _('Upload'),
