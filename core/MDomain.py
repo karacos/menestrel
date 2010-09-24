@@ -25,7 +25,10 @@ class MDomain(karacos.db['Domain']):
         karacos.db['Domain'].__init__(self,*args, **kw)
         if 'KC_M_user_profiles_node_name' not in self:
             self['KC_M_user_profiles_node_name'] = 'users'
-        self.save()
+        if 'staticdirs' not in self:
+            self['staticdirs'] = {}
+        staticdirname = os.path.join(karacos.apps['menestrel'].__path__[0],'resources','static')
+        self['staticdirs']['m_design'] = staticdirname
         m_templatesdir = os.path.join(karacos.apps['menestrel'].__path__[0],'resources','templates')
         if 'templatesdirs' not in self:
             self['templatesdirs'] = [m_templatesdir]

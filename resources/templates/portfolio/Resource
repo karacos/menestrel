@@ -1,0 +1,70 @@
+<h1 id="resource_title">
+	% if 'title' in instance:
+		${instance['title']}
+	% else:
+		Noeud ${instance['name']} du domaine ${instance.__domain__['name']}
+	% endif
+	</h1>
+	% if result:
+		${result}
+	% endif
+	% if 'apps' in instance:
+		<ul>
+		% for app in instance['apps']:
+			<li><a href="${app}">${app}</a></li>
+		% endfor
+		</ul>
+	% endif
+	<p id="resource_content">
+	% if 'content' in instance:
+		${instance['content']}
+	% else:
+		No content found
+	% endif
+	</p>
+	
+	<script language="javascript">
+			GENTICS.Aloha.settings = {
+		   'i18n' : {
+		     'current' : 'fr'
+		   },
+		   'base' : 'http://${instance.__domain__['fqdn']}/_browser/aloha/',
+		   'ribbon' : true,
+		   'plugins': {
+		   				"org.karacos.aloha.Plugin": { 
+		   				instance_url : "http://${instance.__domain__['fqdn']}/${instance._get_action_url()}",
+		   				edit_content_action : "edit_content",
+		   				idfieldsref : {
+								resource_title	: "title",
+								resource_content 	: "content"
+						  	}},
+						"com.gentics.aloha.plugins.Link": {
+									config : [ 'a' ],
+								  	editables : {
+									'#resource_title'	: [  ]
+								  	},
+								  	targetregex : '^(?!.*${instance.__domain__['fqdn']}).*',
+								  	target : '_blank',
+								  	},
+						"com.gentics.aloha.plugins.List": {
+							editables : {
+									'#resource_title'	: [  ]
+								  	}
+						},
+						"com.gentics.aloha.plugins.Table": {
+							editables : {
+									'#resource_title'	: [  ]
+								  	}
+						},
+			   			"com.gentics.aloha.plugins.Format": { 
+							config : [ 'b', 'i','u','del','sub','sup', 'p', 'title', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'removeFormat'],
+						  	editables : {
+								'#resource_title'	: [ ], // no formatting allowed
+								'#resource_content' 	: [ 'b', 'i', 'u', 'del', 'sub', 'sup','removeFormat'  ] // just basic formattings, no headers, etc.
+						  	}
+						} 
+					}
+		 };
+	$("#resource_title").aloha();
+	$("#resource_content").aloha();
+	</script>

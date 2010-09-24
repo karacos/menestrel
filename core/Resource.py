@@ -149,9 +149,9 @@ class Resource(karacos.db['WebNode']):
     def _get_edit_resource_content_form(self):
         self._update_item()
         if 'content' not in self:
-            self['content'] = ''
+            self['content'] = 'no content found'
         if 'title' not in self:
-            self['title'] = ''
+            self['title'] = 'no title'
         if 'stylesheets' not in self:
             self['stylesheets'] = ['']
         if 'editor' not in self:
