@@ -1,3 +1,6 @@
+<% user_auth = instance.__domain__.get_user_auth() %>
+<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
+
              	<a href="#"><img src="/m_design/themes/portfolio/images/box.jpg" alt="" border="0" /></a>
                 <a href="#"><img src="/m_design/themes/portfolio/images/box.jpg" alt="" border="0"/></a>
                 

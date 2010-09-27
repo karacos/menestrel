@@ -1,7 +1,5 @@
 <%namespace name="form" file="/portfolio/namespace/form" inheritable="True"/>
 <%namespace name="head" file="/portfolio/namespace/head" inheritable="True"/>
 <%namespace name="site" file="/portfolio/namespace/site" inheritable="True"/>
-<% user_auth = instance.__domain__.get_user_auth() %>
-<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
 
 ${next.body()}
