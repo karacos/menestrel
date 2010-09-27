@@ -33,7 +33,7 @@ class MDomain(karacos.db['Domain']):
         if 'templatesdirs' not in self:
             self['templatesdirs'] = [m_templatesdir]
         if m_templatesdir not in self['templatesdirs']:
-            self['templatesdirs'].append(self['templatesdirs'])
+            self['templatesdirs'].append(m_templatesdir)
         self.save()
         if 'register' not in self['ACL']['user.anonymous@%s'%self['name']]:
             self['ACL']['user.anonymous@%s'%self['name']].append('register')
