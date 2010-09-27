@@ -186,7 +186,7 @@ class MDomain(karacos.db['Domain']):
          'fields': [{'name':'password', 'title':'Mot de passe','dataType': 'PASSWORD'},
                     {'name':'confirmation', 'title':'Confirmez le mot de passe','dataType': 'PASSWORD'}]
         }
-    create_password.label = _('Creation du mot de passe')
+    
     @karacos._db.isaction
     def modify_person_data(self):
         """

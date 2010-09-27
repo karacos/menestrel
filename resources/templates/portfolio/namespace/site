@@ -1,6 +1,7 @@
 <%namespace name="form" file="/technobabble/namespace/form"/>
 
 <%def name="show_content(action,instance,result)">
+<div id="dialog_window"></div>
 	% if action:
 		
 		<div>
@@ -59,12 +60,15 @@
     <meta name="keywords" content="${instance['name']}" />
   % endif
 	<link rel="stylesheet" href="/m_design/themes/portfolio/style.css" type="text/css" />
+	<link rel="stylesheet" href="/_browser/jquery-ui/themes/base/jquery.ui.all.css" type="text/css" />
 	% if 'head_bloc' in instance.__domain__:
 		${instance.__domain__['head_bloc']}
 	% endif
 	## % if isstaff:
 	<script>GENTICS_Aloha_base="/_browser/aloha/";</script>
 	<script type="text/javascript" src="/_browser/aloha/core/include.js"></script>
+	<script type="text/javascript" src="/_browser/js/jquery-ui-1.8.custom.min.js"></script>
+	<script type="text/javascript" src="/_browser/js/karacos-forms.js"></script>
 	<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.Format/plugin.js"></script>
 	<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.Table/plugin.js"></script>
 	<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.List/plugin.js"></script>
@@ -73,9 +77,6 @@
 	##<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.TOC/plugin.js"></script>
 	
 	<script type="text/javascript" src="/_browser/aloha/plugins/org.karacos.aloha.Plugin/plugin.js"></script>
-	
-
-	 ## % endif
 	
 	
 </%def>
