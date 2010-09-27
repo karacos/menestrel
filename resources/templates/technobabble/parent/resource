@@ -1,13 +1,13 @@
-<%! 
+<% 
 import karacos
 %>
-<%!
+<%
  session = karacos.serving.get_session()
  %>
-<%!
+<%
  domain = session.get_karacos_domain()
  %>
-<%!
+<%
  user = session.get_user_auth()
  %>
 <%!

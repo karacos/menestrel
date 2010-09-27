@@ -1,15 +1,32 @@
-<%inherit file="/portfolio/parent/resource"/>
-             	<a href="#"><img src="/m_design/themes/portfolio/images/box.jpg" alt="" border="0" /></a>
-                <a href="#"><img src="/m_design/themes/portfolio/images/box.jpg" alt="" border="0"/></a>
-                
-                <a href="#"><img src="/m_design/themes/portfolio/images/box.jpg" alt="" border="0" /></a>
-                <a href="#"><img src="/m_design/themes/portfolio/images/box.jpg" alt="" border="0" /></a>
-                
-                <a href="#"><img src="/m_design/themes/portfolio/images/box.jpg" alt="" border="0" /></a>
-                <a href="#"><img src="/m_design/themes/portfolio/images/box.jpg" alt="" border="0"/></a>
-
-                
-                	<script language="javascript">
+<%inherit file="/technobabble/parent/resource"/>
+<h1 id="resource_title">
+	% if 'title' in instance:
+		${instance['title']}
+	% else:
+		Noeud ${instance['name']} du domaine ${instance.__domain__['name']}
+	% endif
+	</h1>
+	% if result:
+		${result}
+	% endif
+	% if 'apps' in instance:
+		<ul>
+		% for app in instance['apps']:
+			<li><a href="${app}">${app}</a></li>
+		% endfor
+		</ul>
+	% endif
+	<div id="resource_content">
+	<p>
+	% if 'content' in instance:
+		${instance['content']}
+	% else:
+		No content found
+	% endif
+	</p>
+	</div>
+	
+		<script language="javascript">
 
 
 
@@ -22,7 +39,7 @@
 	   'ribbon' : true,
 	   'plugins': {
 	   				"org.karacos.aloha.Plugin": { 
-	   				instance_url : "http://${instance.__domain__['fqdn']}",
+	   				instance_url : "http://${instance.__domain__['fqdn']}${instance._get_action_url()}",
 	   				% if self.attr.isstaff:
 		   				edit_content_action : "edit_content",
 		   			% endif
@@ -79,6 +96,5 @@
 		% endif
 
 });
-
+			
 	</script>
-	

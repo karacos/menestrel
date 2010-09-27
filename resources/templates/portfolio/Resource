@@ -1,6 +1,4 @@
-<% user_auth = instance.__domain__.get_user_auth() %>
-<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
-
+<%inherit file="/portfolio/parent/resource"/>
 <h1 id="resource_title">
 	% if 'title' in instance:
 		${instance['title']}
@@ -42,7 +40,7 @@
 	   'plugins': {
 	   				"org.karacos.aloha.Plugin": { 
 	   				instance_url : "http://${instance.__domain__['fqdn']}${instance._get_action_url()}",
-	   				% if isstaff:
+	   				% if self.attr.isstaff:
 		   				edit_content_action : "edit_content",
 		   			% endif
 	   				idfieldsref : {
@@ -92,7 +90,7 @@
 			}
 			*/
 		});
-		 % if isstaff:
+		 % if self.attr.isstaff:
 			$("#resource_title").aloha();
 			$("#resource_content").aloha();
 		% endif
