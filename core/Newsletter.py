@@ -211,10 +211,11 @@ class Newsletter(karacos.db['EntriesHolder']):
         """
         Return a list of newsletter subscribers
         """
-        result = []
-        for item in self.__get_subscribers_list__(self._get_subscribers_node().id):
-            result.append({item.key:item.value})
-        return result
+        result = self._get_subscribers_node()['childrens'] #[]
+        #for item in self._get_subscribers_node()['childrens']:
+        #    result.append({item.key:item.value})
+        return {"status":"success","message":_("Operation reussie"), "data": result, "datatype": "subscribers_list"}
+    view_subscribers.label = _("Abonnes")
     
     def _get_public_entries(self,number=5):
         result = {}
