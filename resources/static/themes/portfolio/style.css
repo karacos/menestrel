@@ -295,3 +295,43 @@ h5 a:hover{
 	text-transform:uppercase;
 	margin:90px 0 15px 0;
 }
+
+#subnavlinks {
+	list-style-type:none;
+	}
+#subnavlinks li {
+	float:left;
+	position:relative;
+	}
+.result_message {
+	color:white;
+	top: 10px;
+	margin:5px;
+	padding:5px;
+}
+.result_message p.success {
+	background-color:darkgreen;
+	border:1px solid white;
+	font-weight: bold;
+	text-align: center;
+	margin:5px;
+	padding:5px;
+}
+.result_message p.error {
+	background-color: darkred;
+	border:1px solid white;
+	font-family: Arial, SansSerif;
+	font-weight: bold;
+	text-align: center;
+	margin:5px;
+	padding:5px;
+}
+.result_message p.failure {
+	background-color: darkred;
+	border:1px solid white;
+	font-family: Arial, SansSerif;
+	font-weight: bold;
+	text-align: center;
+	margin:5px;
+	padding:5px;
+}
