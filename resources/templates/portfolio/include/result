@@ -1,0 +1,7 @@
+% if result:
+		 % if 'message' in result :
+				<div class="result_message">
+					<p class="${result['status']}">${result['message']}</p>
+				</div>
+			% endif
+		% endif

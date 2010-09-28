@@ -6,30 +6,6 @@ ${self.site.head(instance)}
 </head>
 
 <body>
-
-
-<div id="top">
-	<div id="insidetop">
-        <h4>Drop Down Menu</h4>
-        
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam. Lorem 			   		ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod temporall</p>
-        
-        <h5><a href="#">Your Site Here</a></h5>
-        <h5><a href="#">Your Site Here</a></h5>
-        <h5><a href="#">Your Site Here</a></h5>
-        <h5><a href="#">Your Site Here</a></h5>
-        <h5><a href="#">Your Site Here</a></h5>
-        
-    </div><!--insidetop-->
-</div><!-- top -->
-
-<div id="topline">	
-	<div class="content">
-       <a><strong>YOUR SITE</strong> NETWORK</a>
-    </div>
-</div><!-- topline -->
-
-
 <div id="wrapper">
 
     	<div class="content">

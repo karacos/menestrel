@@ -71,7 +71,14 @@ class Resource(karacos.db['WebNode']):
           'form': self._add_comment_form() }
     
     
-    
+    @karacos._db.isaction
+    def create_resource(self,name=None):
+        # TODO: String encoding (for utf-8 problems)
+        data = {'name': name}
+        result = self._create_child_node(data=data,type='Resource',base=False)
+    create_resource.label = _("Creer une resource")
+    create_resource.form = {'submit': _('Commenter'), 'title': _("Ajouter un commentaire"),
+                            'fields':  [{'name':'name', 'title':_('Nom de la resource'), 'dataType': 'TEXT'}] }
     @karacos._db.isaction
     def add_comment(self,*args,**kw):   
         self.__domain__._update_item()

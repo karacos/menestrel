@@ -1,4 +1,6 @@
-<%inherit file="/technobabble/parent/resource"/>
+<% user_auth = instance.__domain__.get_user_auth() %>
+<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
+
 <h1 id="resource_title">
 	% if 'title' in instance:
 		${instance['title']}
@@ -6,16 +8,7 @@
 		Noeud ${instance['name']} du domaine ${instance.__domain__['name']}
 	% endif
 	</h1>
-	% if result:
-		${result}
-	% endif
-	% if 'apps' in instance:
-		<ul>
-		% for app in instance['apps']:
-			<li><a href="${app}">${app}</a></li>
-		% endfor
-		</ul>
-	% endif
+	<%include file="/technobabble/include/subelements"/>
 	<div id="resource_content">
 	<p>
 	% if 'content' in instance:
@@ -40,7 +33,7 @@
 	   'plugins': {
 	   				"org.karacos.aloha.Plugin": { 
 	   				instance_url : "http://${instance.__domain__['fqdn']}${instance._get_action_url()}",
-	   				% if self.attr.isstaff:
+	   				% if isstaff:
 		   				edit_content_action : "edit_content",
 		   			% endif
 	   				idfieldsref : {
@@ -90,7 +83,7 @@
 			}
 			*/
 		});
-		 % if self.attr.isstaff:
+		 % if isstaff:
 			$("#resource_title").aloha();
 			$("#resource_content").aloha();
 		% endif

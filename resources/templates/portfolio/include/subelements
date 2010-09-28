@@ -1,0 +1,8 @@
+<div id="subnavmenu">
+	<ul id="subnavlinks">	
+		<% childrens = instance.get_web_childrens_for_id() %>
+		% for child in childrens.keys():
+			<li><a href="${instance._get_action_url()}/${childrens[child]}/">${childrens[child]}</a></li>
+		% endfor
+	</ul>
+</div>

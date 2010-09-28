@@ -1,15 +1,15 @@
-<% 
-import karacos
+<%!
+ import karacos
 %>
-<%
+<%!
  session = karacos.serving.get_session()
- %>
-<%
+%>
+<%!
  domain = session.get_karacos_domain()
- %>
-<%
+%>
+<%! 
  user = session.get_user_auth()
- %>
+%>
 <%!
  isstaff = 'group.staff@%s' % domain['name'] in user['groups']
   %>

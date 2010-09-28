@@ -9,13 +9,6 @@
 	% if result:
 		${result}
 	% endif
-	% if 'apps' in instance:
-		<ul>
-		% for app in instance['apps']:
-			<li><a href="${app}">${app}</a></li>
-		% endfor
-		</ul>
-	% endif
 	<div id="resource_content">
 	<p>
 	% if 'content' in instance:

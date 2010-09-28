@@ -55,7 +55,7 @@ color:#666666;
 #navlist li a:visited { color: #999999; text-decoration:none; }
 #navlist li a:hover {color: #7394A0; text-decoration:none; }
 
-h3{
+h1{
 font-size:21px;
 font-weight:bold;
 color:#8C7364;
@@ -73,6 +73,8 @@ height:66px;
 text-align:center;
 font: 8pt/14pt 'Lucida Grande', Verdana, Helvetica, sans-serif;
 color:#333333;
+float:left;
+width:100%
 }
 
 #title{
@@ -82,4 +84,54 @@ left:9px;
 padding-left:9px;
 font: 14pt/12pt 'Lucida Grande', Verdana, Helvetica, sans-serif;
 color:#275A78;
+}
+#subnavmenu {
+	float:left;
+	width:100%;
+	}
+#resource_content {
+	float: left;
+	}
+#domain_content {
+	float: left;
+	}
+
+#subnavlinks {
+	list-style-type:none;
+	}
+#subnavlinks li {
+	float:left;
+	position:relative;
+	}
+.result_message {
+	color:white;
+	top: 10px;
+	margin:5px;
+	padding:5px;
+}
+.result_message p.success {
+	background-color:darkgreen;
+	border:1px solid white;
+	font-weight: bold;
+	text-align: center;
+	margin:5px;
+	padding:5px;
+}
+.result_message p.error {
+	background-color: darkred;
+	border:1px solid white;
+	font-family: Arial, SansSerif;
+	font-weight: bold;
+	text-align: center;
+	margin:5px;
+	padding:5px;
+}
+.result_message p.failure {
+	background-color: darkred;
+	border:1px solid white;
+	font-family: Arial, SansSerif;
+	font-weight: bold;
+	text-align: center;
+	margin:5px;
+	padding:5px;
 }

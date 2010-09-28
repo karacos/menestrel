@@ -1,24 +1,29 @@
-<% user_auth = instance.__domain__.get_user_auth() %>
-<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
+<%inherit file="/technobabble/parent/resource"/>
+<h1 id="resource_title">
+	% if 'title' in instance:
+		${instance['title']}
+	% else:
+		Noeud ${instance['name']} du domaine ${instance.__domain__['name']}
+	% endif
+	</h1>
+	% if result:
+		${result}
+	% endif
+	<%include file="/technobabble/include/result"/>
+	<div id="resource_content">
+	<p>
+	% if 'content' in instance:
+		${instance['content']}
+	% else:
+		No content found
+	% endif
+	</p>
+	</div>
+	
+		<script language="javascript">
 
-		<h1 id="domain_title">
-		% if 'title' in instance and instance['title'] != '':
-        ${instance['title']}
-		% else:
-			Bienvenue sur le domaine ${instance['name']}
-		% endif
-		</h1>
-        <div id="domain_content">
-		<p>
-		% if 'content' in instance and instance['content'] != '':
-			${instance['content']}
-		% else:
-			No content found
-		% endif
-		</p>
-		</div>
 
-<script language="javascript">
+
 	$(function(){ 
 	GENTICS.Aloha.settings = {
 	   'i18n' : {
@@ -28,37 +33,37 @@
 	   'ribbon' : true,
 	   'plugins': {
 	   				"org.karacos.aloha.Plugin": { 
-	   				instance_url : "http://${instance.__domain__['fqdn']}",
-	   				% if isstaff:
+	   				instance_url : "http://${instance.__domain__['fqdn']}${instance._get_action_url()}",
+	   				% if self.attr.isstaff:
 		   				edit_content_action : "edit_content",
 		   			% endif
 	   				idfieldsref : {
-							domain_title	: "title",
-							domain_content 	: "content"
+							resource_title	: "title",
+							resource_content 	: "content"
 					  	}},
 					"com.gentics.aloha.plugins.Link": {
 								config : [ 'a' ],
 							  	editables : {
-								'#domain_title'	: [  ]
+								'#resource_title'	: [  ]
 							  	},
 							  	targetregex : '^(?!.*${instance.__domain__['fqdn']}).*',
 							  	target : '_blank',
 							  	},
 					"com.gentics.aloha.plugins.List": {
 						editables : {
-								'#domain_title'	: [  ]
+								'#resource_title'	: [  ]
 							  	}
 					},
 					"com.gentics.aloha.plugins.Table": {
 						editables : {
-								'#domain_title'	: [  ]
+								'#resource_title'	: [  ]
 							  	}
 					},
 		   			"com.gentics.aloha.plugins.Format": { 
 						config : [ 'b', 'i','u','del','sub','sup', 'p', 'title', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'removeFormat'],
 					  	editables : {
-							'#domain_title'	: [ ], // no formatting allowed
-							'#domain_content' 	: [ 'b', 'i', 'u', 'del', 'sub', 'sup','removeFormat'  ] // just basic formattings, no headers, etc.
+							'#resource_title'	: [ ], // no formatting allowed
+							'#resource_content' 	: [ 'b', 'i', 'u', 'del', 'sub', 'sup','removeFormat'  ] // just basic formattings, no headers, etc.
 					  	}
 					} // plugin
 				} // plugins
@@ -79,12 +84,11 @@
 			}
 			*/
 		});
-		 % if isstaff:
-			$("#domain_title").aloha();
-			$("#domain_content").aloha();
+		 % if self.attr.isstaff:
+			$("#resource_title").aloha();
+			$("#resource_content").aloha();
 		% endif
 
 });
-
+			
 	</script>
-	
