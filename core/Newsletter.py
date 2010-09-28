@@ -364,6 +364,51 @@ class Newsletter(karacos.db['EntriesHolder']):
         template = self.__domain__.lookup.get_template('/system')
         return template.render(instance=self,result=result['message'])
     
+    def _get_edit_resource_content_form(self):
+        self._update_item()
+        if 'content' not in self:
+            self['content'] = 'no content found'
+        if 'title' not in self:
+            self['title'] = 'no title'
+        if 'stylesheets' not in self:
+            self['stylesheets'] = ['']
+        if 'editor' not in self:
+            self['editor'] = 'WYSIWYG'
+        if 'keywords' not in self:
+            self['keywords'] = ''
+        if 'description' not in self:
+            self['description'] = ''
+        self.save()
+        form = {'title':'Modifier le contenu de la page',
+                'submit':'Modifier',
+                'fields':[
+                    {'name': 'stylesheets','title':_('Feuilles de style'),'dataType': 'TEXT', 'formType': 'TEXTAREA','value': karacos.json.dumps(self['stylesheets'])},
+                    {'name':'title', 'title':_('Titre'), 'dataType': 'TEXT', 'value': self['title']},
+                    {'name': 'keywords','title':_('Mots clef SEO'),'dataType': 'TEXT','value': self['keywords']},
+                    {'name': 'description','title':_('Description SEO'),'dataType': 'TEXT', 'formType': 'TEXTAREA','value': self['description']},
+                    {'name':'content', 'title':_('Contenu'), 'dataType': 'TEXT', 'formType': self['editor'], 'value': self['content']}
+                        ]}
+        
+        return form
+    
+    @karacos._db.isaction
+    def edit_content(self,title=None,content=None,stylesheets=None, description=None, keywords=None):
+        """
+        Basic content modification for Resource
+        """
+        self._update_item()
+        self.log.info("EDIT CONTENT %s" % {title:content})
+        self['content'] = content
+        self['title'] = title
+        self['description'] = description
+        self['keywords'] = keywords
+        assert isinstance(stylesheets,basestring)
+        self['stylesheets'] = karacos.json.loads(stylesheets)
+        self.save()
+        return {'status':'success', 'message':_("Contenu modifi&eacute;"),'data':{}}
+    edit_content.get_form = _get_edit_resource_content_form
+    edit_content.label = _('Modifier la page')
+    
     def _unregister_user(self,email=None, validation=None):
         """
         Unregister from newsletter
