@@ -70,6 +70,6 @@ class Entry(karacos.db['Resource']):
         everyone = 'group.everyone@%s' % self.__domain__['name']
         self['ACL'][everyone] = ["get_user_actions_forms","w_browse","index","add_comment","get_comments"]
         self.save()
-        self.parent._entry_publish(self)
+        self.__parent__._entry_publish(self)
         return {'status':'success', 'message':'Message publie'}
     

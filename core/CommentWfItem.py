@@ -53,14 +53,16 @@ class CommentWfItem(karacos.db['WorkFlowItem']):
          'submit': _('Envoyer'),
          'fields': [
                     {'name':'comment_action', 'title':'Action','dataType': 'TEXT',
-                       'formType':'RADIO', 'values': self.actions.keys()}
+                       'formType':'RADIO', 'values': []}
                     
                     ]
                     }
+        for action in self.actions.keys():
+            result['fields'][0]['values'].append({'label': action , 'value': action})
         return result
     
     def _get_title(self):
-        return "Par %s [%s] sur %s" % (self.__comment__['pseudo'],self.__comment__['ip'], self.__comment__.parent['name'])
+        return "Par %s [%s] sur %s" % (self.__comment__['pseudo'],self.__comment__['ip'], self.__comment__.__parent__['name'])
     
     def _get_description(self):
         return self.__comment__['comment']
