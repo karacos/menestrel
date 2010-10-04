@@ -1,4 +1,4 @@
-<%namespace name="form" file="/technobabble/namespace/form"/>
+<%namespace name="form" file="/portfolio/namespace/form"/>
 
 <%def name="show_content(action,instance,result)">
 <div id="dialog_window"></div>
@@ -61,19 +61,15 @@
   % endif
 	<link rel="stylesheet" href="/m_design/themes/portfolio/style.css" type="text/css" />
 	<link rel="stylesheet" href="/_browser/jquery-ui/themes/base/jquery.ui.all.css" type="text/css" />
-	<script>GENTICS_Aloha_base="/_browser/aloha/";</script>
-	<script type="text/javascript" src="/_browser/aloha/core/include.js"></script>
-	<script type="text/javascript" src="/_browser/js/jquery-ui-1.8.custom.min.js"></script>
-	<script type="text/javascript" src="/_browser/js/karacos-forms.js"></script>
-	<script src="/_browser/js/karacos.fileUploader.js" type="text/javascript"></script>
-	<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.Format/plugin.js"></script>
-	<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.Table/plugin.js"></script>
-	##<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.List/plugin.js"></script>
-	<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.Link/plugin.js"></script>
-	##<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.HighlightEditables/plugin.js"></script>
-	##<script type="text/javascript" src="/_browser/aloha/plugins/com.gentics.aloha.plugins.TOC/plugin.js"></script>
-	<script type="text/javascript" src="/_browser/aloha/plugins/org.karacos.aloha.Img/plugin.js"></script>
-	<script type="text/javascript" src="/_browser/aloha/plugins/org.karacos.aloha.Plugin/plugin.js"></script>
+	<% user_auth = instance.__domain__.get_user_auth() %>
+	<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
+	% if isstaff:
+  	<script>GENTICS_Aloha_base="/_browser/aloha/";</script>
+  	<script type="text/javascript" src="/_browser/karacos-full-yuimin.js"></script>
+	<link rel="stylesheet" type="text/css" href="/_browser/aloha/plugins/org.karacos.aloha.Img/resources/style.css" />
+  	% else:
+  	<script type="text/javascript" src="/_browser/karacos-min-yuimin.js"></script>
+  	% endif
 	% if 'head_bloc' in instance.__domain__:
 		${instance.__domain__['head_bloc']}
 	% endif

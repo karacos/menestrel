@@ -32,7 +32,6 @@
 
 
 
-	$(function(){ 
 	GENTICS.Aloha.settings = {
 	   'i18n' : {
 	     'current' : 'fr'
@@ -77,6 +76,8 @@
 				} // plugins
 				
 		}; //Aloha.Settings
+
+	$(function(){ 
 		$('#dialog_window').dialog({
 			autoOpen: false,
 
@@ -97,6 +98,6 @@
 			$("#resource_content").aloha();
 		% endif
 
-});
+	});
 			
 	</script>
