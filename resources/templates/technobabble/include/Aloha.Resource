@@ -1,31 +1,3 @@
-<%inherit file="/technobabble/parent/resource"/>
-<% user_auth = instance.__domain__.get_user_auth() %>
-<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
-<h1 id="resource_title">
-	% if 'title' in instance:
-		${instance['title']}
-	% else:
-		Noeud ${instance['name']} du domaine ${instance.__domain__['name']}
-	% endif
-	</h1>
-	% if result:
-		${result}
-	% endif
-	<div id="resource_content">
-	<p>
-	% if 'content' in instance:
-		${instance['content']}
-	% else:
-		No content found
-	% endif
-	</p>
-	</div>
-	
-		<script language="javascript">
-
-
-
-	$(function(){ 
 	GENTICS.Aloha.settings = {
 	   'i18n' : {
 	     'current' : 'fr'
@@ -64,32 +36,12 @@
 						config : [ 'b', 'i','u','del','sub','sup', 'p', 'title', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'removeFormat'],
 					  	editables : {
 							'#resource_title'	: [ ], // no formatting allowed
-							'#resource_content' 	: [ 'b', 'i', 'u', 'del', 'sub', 'sup','removeFormat'  ] // just basic formattings, no headers, etc.
+							'#resource_content' 	: [ 'b', 'i', 'u', 'del', 'sub', 'sup','removeFormat', 'h2','h3'  ] // just basic formattings, no headers, etc.
 					  	}
 					} // plugin
 				} // plugins
 				
 		}; //Aloha.Settings
-		$('#dialog_window').dialog({
-			autoOpen: false,
-
-			width: 400,
-			/*
-			buttons: {
-				"Ok": function() { 
-					$(this).dialog("close"); 
-				}, 
-				"Cancel": function() { 
-					$(this).dialog("close"); 
-				} 
-			}
-			*/
-		});
-		 % if isstaff:
-			$("#resource_title").aloha();
-			$("#resource_content").aloha();
-		% endif
-
-});
-			
-	</script>
+		
+		$("#resource_title").aloha();
+		$("#resource_content").aloha();
