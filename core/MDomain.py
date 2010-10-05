@@ -235,7 +235,7 @@ class MDomain(karacos.db['Domain']):
         if 'personData' not in user.__childrens__:
             personData = {'name':'personData'}
             karacos.db['Person'].create(user=user, base=None,data=personData)
-        return user.__childrens__['personData']
+        return user.db[user['childrens']['personData']]
         
 
     def _register(self,email=None,password=None):
