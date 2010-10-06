@@ -36,7 +36,7 @@
 	   'i18n' : {
 	     'current' : 'fr'
 	   },
-	   'base' : 'http://${instance.__domain__['fqdn']}/_browser/aloha/',
+	   'base' : 'http://${instance.__domain__['fqdn']}/' + GENTICS_Aloha_base,
 	   'ribbon' : true,
 	   'plugins': {
 	   				"org.karacos.aloha.Plugin": { 
