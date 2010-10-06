@@ -64,11 +64,9 @@
 	<% user_auth = instance.__domain__.get_user_auth() %>
 	<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
 	% if isstaff:
-  	<script>GENTICS_Aloha_base="/_browser/aloha/";</script>
-  	<script type="text/javascript" src="/_browser/karacos-full-yuimin.js"></script>
-	<link rel="stylesheet" type="text/css" href="/_browser/aloha/plugins/org.karacos.aloha.Img/resources/style.css" />
+  	<%include file="/includes/karacos_full_js"/>
   	% else:
-  	<script type="text/javascript" src="/_browser/karacos-min-yuimin.js"></script>
+  	<%include file="/includes/karacos_min_js"/>
   	% endif
 	% if 'head_bloc' in instance.__domain__:
 		${instance.__domain__['head_bloc']}

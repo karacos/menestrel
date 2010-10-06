@@ -17,23 +17,23 @@ ${self.site.head(instance)}
                 
              </div><!--header-->
              
-               <div class="sidebar">
-             	
-                <a href="#"><img src="/m_design/themes/portfolio/images/sidebar.jpg" alt="" border="0" /></a>
-                <a href="#"><img src="/m_design/themes/portfolio/images/sidebar.jpg" alt="" border="0" /></a>
-                
-                
-                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" /></a>
-                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" class="noright"  /></a>
-                
-                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" /></a>
-                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" class="noright" /></a>
-                
-                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" /></a>
-                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" class="noright"  /></a>
-                
-
-             </div><!--sidebar-->
+##               <div class="sidebar">
+##             	
+##                <a href="#"><img src="/m_design/themes/portfolio/images/sidebar.jpg" alt="" border="0" /></a>
+##                <a href="#"><img src="/m_design/themes/portfolio/images/sidebar.jpg" alt="" border="0" /></a>
+##                
+##                
+##                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" /></a>
+##                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" class="noright"  /></a>
+##                
+##                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" /></a>
+##                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" class="noright" /></a>
+##                
+##                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" /></a>
+##                <a href="#"><img src="/m_design/themes/portfolio/images/sidebarmini.jpg" alt="" border="0" class="noright"  /></a>
+##                
+##
+##             </div><!--sidebar-->
              
              <div id="container">
              	${self.site.show_content(action,instance,result)}
@@ -47,33 +47,33 @@ ${self.site.head(instance)}
 <div id="footer">
     	<div class="content">
         		
-                 <div class="sidebar">
+##                 <div class="sidebar">
+##                   
+##                   		<a href="#"><img src="/m_design/themes/portfolio/images/footerbox.png" alt="" border="0" /></a>
+##                        <a href="#"><img src="/m_design/themes/portfolio/images/footerbox.png" alt="" border="0" class="noright" /></a>
+##                   
+##                   </div><!--sidebar-->
+##               <div id="left">
+##            	<h3>SPONSORSHIP FRIENDS</h3>
+##                    <p><a href="#">Website Templates</a></p>
+##                    <p><a href="#">Website Builder</a></p>
+##                    <p><a href="#">Web design</a></p>
+##                    <p><a href="#">Powerpoint Templates</a></p>
+##                    <p><a href="#">Hosting Reseller</a></p>
+##                    <p><a href="#">Dedicated Server Hosting</a></p>
+##                 </div><!--left-->   
+##                 
+##                 <div id="right">   
+##                 <h3>OUR RESOURCE SITES</h3>
+##                    <p><a href="#">Branding and Identity </a></p>
+##                    <p><a href="#">Nature Based CSS Gallery </a></p>
+##                    <p><a href="#">Free Vector Illustrations</a></p>
+##                    <p><a href="#">Organic Web Design</a></p>
+##                    <p><a href="#">Web Design</a></p>
+##                    <p><a href="#">West Coast Clothing Co</a></p>
+##                   </div><!--right-->
                    
-                   		<a href="#"><img src="/m_design/themes/portfolio/images/footerbox.png" alt="" border="0" /></a>
-                        <a href="#"><img src="/m_design/themes/portfolio/images/footerbox.png" alt="" border="0" class="noright" /></a>
-                   
-                   </div><!--sidebar-->
-               <div id="left">
-            	<h3>SPONSORSHIP FRIENDS</h3>
-                    <p><a href="#">Website Templates</a></p>
-                    <p><a href="#">Website Builder</a></p>
-                    <p><a href="#">Web design</a></p>
-                    <p><a href="#">Powerpoint Templates</a></p>
-                    <p><a href="#">Hosting Reseller</a></p>
-                    <p><a href="#">Dedicated Server Hosting</a></p>
-                 </div><!--left-->   
-                 
-                 <div id="right">   
-                 <h3>OUR RESOURCE SITES</h3>
-                    <p><a href="#">Branding and Identity </a></p>
-                    <p><a href="#">Nature Based CSS Gallery </a></p>
-                    <p><a href="#">Free Vector Illustrations</a></p>
-                    <p><a href="#">Organic Web Design</a></p>
-                    <p><a href="#">Web Design</a></p>
-                    <p><a href="#">West Coast Clothing Co</a></p>
-                   </div><!--right-->
-                   
-                   <a href="#"><span class="leftp">copyright 2010 your comapny name</span></a>
+                   <a href="http://www.karacos.org/"><span class="leftp">copyright 2010 karacos.org</span></a>
                   
                    <a href="http://vectorart.org"><span class="rightp"> Thanks to VectorArt</span></a>
                    
@@ -83,8 +83,9 @@ ${self.site.head(instance)}
 </div><!--footer-->    
     
 <script type='text/javascript'>
+$(".result_message").fadeOut(4000, function() {
+  	});
 $(document).ready(function(){
-
 	$("div#topline a").click(function(){
 	  $("#top").slideToggle("slow");
 	  $(this).toggleClass("active");
