@@ -1,0 +1,92 @@
+<div class="left_column">
+<span class="title_bloc">
+ <h2 class="title_type">Image<br /> 
+ <em>is</em> Nothing</h2>
+ 
+ <span class="number">.01</span> 
+ <a href="#" class="link1">Let Go of Ego</a><br />
+ <span class="subtext">the beginning</span>
+ <br /><br />
+</span>
+ <span class="content">
+You are free to use, modify, or distribute this 
+ template in any way you wish, for any purpose.
+<br /><br />
+ It would be great if you left the <a href="http://www.dream-logic.com">web design 
+ by dreamlogic</a> link in the footer; but if you really want to 
+ remove it, go ahead.
+<br /><br />
+ This template has been tested and is <a href="http://validator.w3.org/check?uri=referer">XHTML</a> and CSS standards-compliant.
+ </span>
+ </div>
+ 
+ 		<script language="javascript">
+
+
+
+	$(function(){ 
+	GENTICS.Aloha.settings = {
+	   'i18n' : {
+	     'current' : 'fr'
+	   },
+	   'base' : '/' + GENTICS_Aloha_base,
+	   'ribbon' : true,
+	   'plugins': {
+	   				"org.karacos.aloha.Plugin": { 
+	   				instance_url : "${instance._get_action_url()}",
+	   				% if self.attr.isstaff:
+		   				edit_content_action : "edit_content",
+		   			% endif
+	   				idfieldsref : {
+							resource_title	: "title",
+							resource_content 	: "content"
+					  	}},
+					"com.gentics.aloha.plugins.Link": {
+								config : [ 'a' ],
+							  	editables : {
+								'#resource_title'	: [  ]
+							  	},
+							  	targetregex : '^(?!.*${instance.__domain__['fqdn']}).*',
+							  	target : '_blank',
+							  	},
+					"com.gentics.aloha.plugins.List": {
+						editables : {
+								'#resource_title'	: [  ]
+							  	}
+					},
+					"com.gentics.aloha.plugins.Table": {
+						editables : {
+								'#resource_title'	: [  ]
+							  	}
+					},
+		   			"com.gentics.aloha.plugins.Format": { 
+						config : [ 'b', 'i','u','del','sub','sup', 'p', 'title', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'removeFormat'],
+					  	editables : {
+							'#resource_title'	: [ ], // no formatting allowed
+							'#resource_content' 	: [ 'b', 'i', 'u', 'del', 'sub', 'sup','removeFormat'  ] // just basic formattings, no headers, etc.
+					  	}
+					} // plugin
+				} // plugins
+				
+		}; //Aloha.Settings
+		$('#dialog_window').dialog({
+			autoOpen: false,
+
+			width: 400,
+			/*
+			buttons: {
+				"Ok": function() { 
+					$(this).dialog("close"); 
+				}, 
+				"Cancel": function() { 
+					$(this).dialog("close"); 
+				} 
+			}
+			*/
+		});
+			$("#resource_title").aloha();
+			$("#resource_content").aloha();
+
+});
+			
+	</script>
