@@ -1,0 +1,250 @@
+body{
+background-color:#FBD0D7;
+margin:0;
+}
+
+a:link{color:#790000; text-decoration:none;}
+a:hover{color:#790000; text-decoration:underline;}
+
+#wrap{
+border:#111111 3px solid;
+background-color:#FFFFFF;
+/*you may need to adjust this value to accomodate your text */
+padding-bottom:220px;
+min-width:845px;
+width:99%;
+float:left;
+margin-left:3px;
+padding-left:5px;
+}
+
+
+#header{
+border-bottom:#000000 6px solid;
+padding-bottom:10px;
+padding-top:6px;
+background:#790000;
+}
+
+#header p{
+font-family:'Georgia','Times New Roman', Times, serif;
+letter-spacing:1px;
+font-size:3em;
+line-height:33px;
+color:#000000;
+text-align:left;
+margin-left:19px;
+margin-bottom:0;
+}
+
+.subtitle{
+font-family:'Georgia','Times New Roman', Times, serif;
+font-style:italic;
+font-size:x-small;
+line-height:18px;
+margin-left:190px;
+color:#999999;
+}
+
+.right{
+font-family:'Georgia','Times New Roman', Times, serif;
+text-align:right;
+float:right;
+width:25%;
+padding:5px;
+margin:10px;
+}
+
+.right1{
+font-family:'Georgia','Times New Roman', Times, serif;
+font-size:1em;
+font-weight:bold;
+color:#790000;
+text-transform:uppercase;
+border-top:#999999 3px double;
+}
+
+.right2{
+font-family:'Georgia','Times New Roman', Times, serif;
+font-size:.9em;
+color:#333333;
+}
+
+.right3{
+font-family:'Georgia','Times New Roman', Times, serif;
+color:#98321B;
+font-size:1em;
+font-weight:bold;
+}
+
+.left_column {
+	position: relative;
+	float:left;
+	}
+
+.left{
+	position:relative;
+font-family:'Georgia','Times New Roman', Times, serif;
+margin-top:60px;
+margin-left:21px;
+padding:12px;
+width:35%;
+padding:10px;
+margin:10px;
+}
+
+.type1{
+font-size:36pt;
+line-height:.8em;
+font-family:'Georgia','Times New Roman', Times, serif;
+}
+
+.type2{
+font-size:36pt;
+line-height:.8em;
+border-bottom:5px solid #790000;
+font-family:'Georgia','Times New Roman', Times, serif;
+}
+
+.title_bloc {
+	float:left;
+	}
+h2.title_type{
+font-size:36pt;
+line-height:.8em;
+font_weight: normal;
+border-bottom:5px solid #790000;
+font-family:'Georgia','Times New Roman', Times, serif;
+}
+
+.number{
+float:left;
+color:#790000;
+font-size:36pt;
+line-height:1em;
+font-family:'Georgia','Times New Roman', Times, serif;
+}
+
+.link1{
+font-family:'Georgia','Times New Roman', Times, serif;
+text-decoration:none;
+color:black;
+font-weight:bold;
+font-size:small;
+line-height:2em;
+text-transform:uppercase;
+}
+
+.subtext{
+letter-spacing:4px;
+color:#222222;
+font-size:.5em;
+text-transform:uppercase;
+font-family:'Georgia','Times New Roman', Times, serif;
+}
+
+.subtext2{
+letter-spacing:4px;
+color:#999999;
+font-size:.7em;
+text-transform:uppercase;
+margin-left:33px;
+font-family:'Georgia','Times New Roman', Times, serif;
+}
+
+.content{
+	float: left;
+	width: 100%;
+font-weight:normal;
+font-family:'Georgia','Times New Roman', Times, serif;
+font-size:1em;
+color:#000000;
+}
+
+#footer{
+margin-top:0;
+border-top:#790000 3px solid;
+padding:21px;
+background-color:#000000;
+}
+
+#footer p{
+color:#333333;
+font-family:'Lucida Grande', Arial, Helvetica, sans-serif;
+font-size:12px;
+}
+
+
+#footer a{
+color:#666666;
+text-decoration:none;
+}
+
+#footer a:hover{
+color:#333333;
+text-decoration:underline;
+}
+
+
+.f1{
+font-family:'Georgia','Times New Roman', Times, serif;
+color:#FBD0D7;
+letter-spacing:-1px;
+font-size:26px;
+}
+
+.f2{
+font-family:'Georgia','Times New Roman', Times, serif;
+color:#790000;
+font-weight:bold;
+letter-spacing:-1px;
+font-size:26px;
+}
+
+p img{
+padding:6px;
+border:#666666 3px double;
+background-color:#FBD0D7;
+}
+
+/*  top menu   */
+
+#navcontainer{
+margin-top:-15px;
+background-color:#000000;
+width:100%;
+}
+
+ #navcontainer ul
+ {
+ margin-bottom:0;
+margin-left:0;
+padding-bottom:0;
+padding-left:0;
+ background-color: #000000;
+ color:#666666;
+ float: left;
+ width: 100%;
+ font-family:'Georgia','Times New Roman', Times, serif;
+ font-size:.9em;
+ font-weight:bold;
+ text-transform:uppercase;
+ }
+
+ #navcontainer ul li { display: inline; }
+
+ #navcontainer ul li a
+ {
+ padding: 0.2em 1em;
+ background-color: #000000;
+ color:#666666;
+ text-decoration: none;
+ float: left;
+ border-right: 1px solid #790000;
+ }
+
+ #navcontainer ul li a:hover
+ {
+ background-color: #FFFFFF;
+ color: #790000;
+ }

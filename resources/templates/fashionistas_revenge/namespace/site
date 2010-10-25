@@ -1,7 +1,4 @@
-<%namespace name="form" file="/portfolio/namespace/form"/>
-
 <%def name="show_content(action,instance,result)">
-<div id="dialog_window"></div>
 	% if action:
 		
 		<div>
@@ -15,15 +12,15 @@
 
 <%def name="show_menu(instance)">
 <% import karacos %>
-     <div id="menu">
+     <div id="navcontainer">
                 
-        <ul>	
+        <ul id="navlist">	
 		<!-- put your navigation links and text here -->
 		<% menuclass = '' %>
 		% if isinstance(instance, karacos.db['Domain']):
 		<% menuclass = 'class="selected"' %>
 		% endif
-		<li ${menuclass}><a href="/">home</a></li>
+		<li ><a href="/">home</a></li>
 		<% childrens = instance.__domain__.get_web_childrens_for_id() %>
 		% for child in childrens.keys():
 			<% menuclass = '' %>
@@ -37,8 +34,7 @@
 </%def>
 
 <%def name="head(instance)">
-	
-	<!-- change this to the title you want to appear in browser title bar -->
+	<head>
 	<meta name="robots" content="index,follow" />
 	<title>
 	% if 'title' in instance:
@@ -59,7 +55,6 @@
   % else:
     <meta name="keywords" content="${instance['name']}" />
   % endif
-	<link rel="stylesheet" href="/m_design/themes/portfolio/style.css" type="text/css" />
 	<% user_auth = instance.__domain__.get_user_auth() %>
 	<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
 	% if isstaff:
@@ -70,16 +65,8 @@
 	% if 'head_bloc' in instance.__domain__:
 		${instance.__domain__['head_bloc']}
 	% endif
-	## % if isstaff:
+	<link rel="stylesheet" href="/m_design/themes/fashionistas_revenge/style.css" type="text/css" />
 	
-	
-</%def>
+	</head>
 
-<%def name="footer(instance)">
-<div id="footer"><br />
-    <a href="http://www.dream-logic.com">Web Design by dreamLogic</a>
-    % if 'foot_bloc' in instance.__domain__:
-		${instance.__domain__['foot_bloc']}
-	% endif
-    </div>
 </%def>
