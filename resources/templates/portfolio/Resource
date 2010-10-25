@@ -48,6 +48,11 @@
 							resource_title	: "title",
 							resource_content 	: "content"
 					  	}},
+					  "com.gentics.aloha.plugins.Link": {
+					  editables: {
+					  	'#resource_title': [],
+					  	'#resource_content' : [] 
+					  };
 					"com.gentics.aloha.plugins.Link": {
 								config : [ 'a' ],
 							  	editables : {

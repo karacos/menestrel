@@ -37,7 +37,7 @@ ${self.site.head(instance)}
              
              <div id="container">
              	${self.site.show_content(action,instance,result)}
-             	
+             	<div id="show-btn">explorer</div>
              </div><!--container-->                        
                         	
         </div><!--content-->
