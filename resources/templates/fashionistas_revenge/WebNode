@@ -10,17 +10,14 @@
 </span>
  <span class="content">
  <div id="resource_content">
-You are free to use, modify, or distribute this 
- template in any way you wish, for any purpose.
-<br /><br />
- It would be great if you left the <a href="http://www.dream-logic.com">web design 
- by dreamlogic</a> link in the footer; but if you really want to 
- remove it, go ahead.
-<br /><br />
- This template has been tested and is <a href="http://validator.w3.org/check?uri=referer">XHTML</a> and CSS standards-compliant.
+% if 'content' in instance and instance['content'] != "":
+		${instance['content']}
+	% else:
+		<p>No content found</p>
+	% endif
+ </div>
  </span>
- </div>
- </div>
+  </div>
  
  		<script language="javascript">
 

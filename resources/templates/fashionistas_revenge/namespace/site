@@ -1,3 +1,5 @@
+<%namespace name="form" file="/fashionistas_revenge/namespace/form"/>
+
 <%def name="show_content(action,instance,result)">
 	% if action:
 		

@@ -12,10 +12,10 @@
 	<%include file="/technobabble/include/result"/>
 	<div id="resource_content">
 	<p>
-	% if 'content' in instance:
+	% if 'content' in instance and instance['content'] != "":
 		${instance['content']}
 	% else:
-		No content found
+		<p>No content found</p>
 	% endif
 	</p>
 	</div>

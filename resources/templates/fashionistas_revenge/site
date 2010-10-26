@@ -8,8 +8,8 @@ ${self.site.head(instance)}
 
 
 <!-- the header -->
-<div id="header"><p><span class="f1">Fashionista's</span> <em>Revenge</em></p>
-<span class="subtext2">A Web Design Template from Dreamlogic</span></div>
+<div id="header"><p><span class="f1">Searsa's</span> <em>Hair Beauty</em></p>
+<span class="subtext2">Tissages et Meches naturelles brésiliennes</span></div>
 
 
 
@@ -30,7 +30,7 @@ ${self.site.show_content(action,instance,result)}
 <!-- the page footer -->
 
 <div id="footer">
-<span class="f1">Fashionista's</span> <span class="f2"><em>Revenge</em></span>
+<span class="f1">Searsa's</span> <span class="f2"><em>Fashion</em></span>
 <p>
 <a href="#">home</a> | <a href="#">watch</a> | <a href="#">listen</a> | <a href="#">think</a> | <a href="#">experience</a> | <a href="#">evolve</a> | <a href="#">wish</a> | <a href="#">connect</a> | <a href="#">create</a>
 </p>
