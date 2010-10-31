@@ -60,9 +60,12 @@
 	<% user_auth = instance.__domain__.get_user_auth() %>
 	<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
 	% if isstaff:
-  	<%include file="/includes/karacos_full_js"/>
+	  	<%include file="/includes/karacos_full_js"/>
+		<script language="javascript">
+			<%include file="${instance.get_aloha_template_uri()}"/>
+		</script>
   	% else:
-  	<%include file="/includes/karacos_min_js"/>
+  		<%include file="/includes/karacos_min_js"/>
   	% endif
 	% if 'head_bloc' in instance.__domain__:
 		${instance.__domain__['head_bloc']}

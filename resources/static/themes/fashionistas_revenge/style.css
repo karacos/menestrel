@@ -80,6 +80,7 @@ font-weight:bold;
 .left_column {
 	position: relative;
 	float:left;
+	width: 48%;
 	}
 
 .left{
