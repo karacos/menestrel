@@ -1,0 +1,295 @@
+body { text-align: center; background-color: #E0D38C; padding: 0; margin: 0 }
+
+/* global */
+
+* {font-family: Verdana, Arial, serif; text-align: left }
+
+/* layout */
+
+#container {
+margin: 0 auto 0 auto;
+width: 770px;
+background: #000;
+overflow: hidden /* Stops background becomming invisible in Firefox */
+}
+
+#hdr {
+width: 770px;
+height: 175px;
+background: url('images/hdr.gif') no-repeat bottom right #E0D38C
+}
+
+#left {
+padding-bottom: 75px; /* Leaves a gap at the bottom of the column to push the background image down */
+float: left;
+width: 165px;
+background: url('images/guitar.gif') no-repeat bottom left #000
+}
+
+#main {
+padding-bottom: 15px; /* Leaves a nice gap at the bottom of the column */
+float: left;
+width: 455px;
+background: transparent
+}
+
+#right {
+padding-bottom: 15px; /* Leaves a nice gap at the bottom of the column */
+float: right;
+width: 150px;
+background: transparent
+}
+
+#bottom { /* This div is used for validation and copyright info */
+margin: 0 auto;
+width: 770px;
+height: 30px;
+line-height: 30px;
+color: #333;
+font-size: 0.6em;
+text-align: center;
+overflow: hidden
+}
+
+#bottom a {
+	padding-right: 10px;
+	color: #634C04;
+	text-decoration: underline
+}
+
+#bottom a:hover {
+	padding-right: 10px;
+	color: #EEAB36;
+	text-decoration: underline
+}
+
+
+/* text & list styles */
+
+#sitetitle {  /* Styles for the site title */
+position: relative;
+top: 8px;
+left: 2px;
+padding: 0px 3px 3px 3px;
+letter-spacing: 2px; /* stretches the title out nicely */
+font-family: Georgia, serif; /* Makes the title a different font to the paragraph text */
+font-size: 2.3em; /* adjust to suit length of title */
+font-weight: bold;
+font-style: italic;
+color: #634C04
+}
+
+#main h1, #main h2 {  /* Styles for headings in the main content area */
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-bottom: 0px;
+  font-family: Georgia, serif; /* Makes the headings a different font to the paragraph text */
+  font-size: 1.0em;
+  font-weight: normal;
+  color: #FCF0AD;
+  line-height: 1.0em;
+  letter-spacing: 2px
+}
+
+#main h2 { /* Makes h2 slightly smaller than h1 */
+  font-size: 0.75em;
+  line-height: 0.75em
+}
+
+.paragraphblock {  /* This div class is used to give the paragraph blocks their background color */
+  margin: 15px;
+  background: #312B0A;
+  border: 1px solid #433B10
+}
+
+#main p {   /* styles main area paragraph text */
+  margin: 15px;
+  font-size: 0.7em;
+  color: #E0D38C;
+  line-height: 1.5em
+}
+
+/* Extra tags are defined here for the main content area */
+#main pre {
+  font-family: monospace;
+  font-size: 11px;
+  margin: 15px;
+  color: #ADA59C;
+  line-height: 12px
+}
+
+#main blockquote {
+  color: #E0D38C;
+  line-height: 1.5em
+}
+
+#main acronym {
+  border-bottom: 1px dashed #E0D38C
+	}
+	
+.updated {   /* styles article dates */
+  margin-left: 20px;
+  padding: 0;
+  color: #ccc;
+  font-size: 0.55em;
+  background: none
+}
+
+#main ul {   /* styles main area unordered(bulleted) lists */
+  margin-top: 15px; /* This margin is the top margin of the WHOLE list, hence why it is specified in ul and not li */
+  margin-bottom: 15px; /* This margin is the bottom margin of the WHOLE list, hence why it is specified in ul and not li */
+  font-size: 0.7em;
+  color: #E0D38C;
+  line-height: 1.5em;
+  list-style: square /* This controls the bullet point style. */
+}
+
+#main li {
+  margin-left: 5px /* This margin acts as an indent for each list item.  Indenting the whole list doesn't work well in IE. */
+}
+
+#main ol {   /* styles main area ordered(numbered) lists */
+  margin-top: 15px; 
+  margin-bottom: 15px; 
+  font-size: 0.7em;
+  color: #E0D38C;
+  line-height: 1.5em;
+  list-style-type:  decimal
+ }
+
+
+#right h1, #right h2 { /* styles for right column headings */
+  margin-top: 26px;
+  margin-left: 5px;
+  font-family: Georgia, serif;
+  font-size: 0.8em;
+  font-weight: normal;
+  color: #FCF0AD;
+  line-height: 0.8em;
+  letter-spacing: 2px
+}
+
+#right p {  /* styles for right column paragraph text */
+  margin: 5px;
+  font-size: 0.6em;
+  line-height: 1.6em;
+  color: #ccc
+}
+
+#left h1, #left h2 {  /* styles for left column headings */
+  margin-top: 26px;
+  margin-left: 5px;
+  font-family: Georgia, serif;
+  font-size: 0.8em;
+  font-weight: normal;
+  color: #FCF0AD;
+  line-height: 0.8em;
+  letter-spacing: 2px
+}
+
+/* links */
+
+#main a:link, #main a:visited {  /* These styles are for links in the main content area only */
+color: #ccc;
+text-decoration: underline
+}
+
+#main a:hover, #main a:active {  /* These styles are for links in the main content area only */
+color: #EEAB36;
+text-decoration: underline
+}
+
+
+#right a:link, #right a:visited {  /* These styles are for links in the right column only */
+color: #ccc;
+text-decoration: underline
+}
+
+#right a:hover, #right a:active {  /* These styles are for links in the right column only */
+color: #EEAB36;
+text-decoration: underline
+}
+
+/* main navigation */
+
+#left ul {   /* defined as left because the nav is in the left div */
+margin: 33px 0 0 0;  /* top margin brings the menu down slightly */
+list-style: none;
+padding: 0;
+width: 160px
+}
+
+#left li {
+border: 0;
+padding: 0;
+margin: 0;
+display: inline /* fix for IE 5 & 6 */
+}
+
+#left a {  /* these "a" styles define the main text that appears when the main links are hovered over */
+display: block;
+border: 0;
+padding: 3px;
+margin: 0;
+font-family: Georgia, serif;
+font-size: 15px;
+text-decoration: none;
+letter-spacing: 3px
+}
+
+#left a:link, #left a:visited { /* these "a" styles define the main text that appears when the main links are hovered over */
+padding-left: 10px;
+color: #FCF0AD;
+background: url('images/menuarrow.gif') no-repeat;
+background-position: 0% 25%
+}
+
+#left a:hover, #left a:active { /* these "a" styles define the main text that appears when the main links are hovered over */
+padding-left: 10px;
+color: #EEAB36;
+background: url('images/menuarrowover.gif') no-repeat;
+background-position: 0% 25%;
+background-color: #444
+}
+
+#left span.comment {   /* the .comment style defines the small text that appears when the links are hovered over */
+margin: 0;
+padding: 0;
+color: #444;
+font-size: 10px;
+background: none;
+letter-spacing: 0;
+visibility: hidden
+}
+
+#left a:hover span.comment  {  /* the .comment style defines the small text that appears when the links are hovered over */
+margin: 0;
+padding: 0;
+color: #fff;
+font-size: 10px;
+background: none;
+letter-spacing: 0;
+visibility: visible
+}
+
+ul#mainnav li span.comment { /* the .comment style defines the small text that appears when the links are hovered over */
+  font-family: Verdana, Arial, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  padding: 0;
+  margin: 0;
+  display: inline;
+  font-size: 10px;
+  line-height: 12px;
+  height: 10px;
+  width: 150px;
+  color: #444;
+  clear: both
+}
+
+
+ul#mainnav li a:hover span.comment { /* the .comment style defines the small text that appears when the links are hovered over */
+  background-color: #555;
+  text-decoration: none;
+  color: #aaa
+}
