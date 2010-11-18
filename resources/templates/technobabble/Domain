@@ -9,13 +9,11 @@
 		% endif
 		</h1>
         <div id="domain_content">
-		<p>
 		% if 'content' in instance and instance['content'] != '':
 			${instance['content']}
 		% else:
-			No content found
+			<p>No content found</p>
 		% endif
-		</p>
 		</div>
 
 <script language="javascript">
