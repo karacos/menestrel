@@ -1,0 +1,61 @@
+<%namespace name="form" file="/default/namespace/form"/>
+
+<%def name="show_comment_form(instance)">
+	% if 'add_comment' in instance._get_actions():
+			${form.show_action(instance.add_comment.get_action(instance))}
+	% endif
+</%def>
+
+<%def name="show_comment(comment,instance,isstaff)">
+	<div class="comment_item">
+		<h5>Le ${comment['creation_date']} par 
+		% if 'website' in comment:	
+			<a href="${comment['website']}">${comment['pseudo']|h}</a>
+		% else:
+			${comment['pseudo']|h}
+		% endif
+		% if isstaff :
+			% if 'ip' in comment:
+				[${comment['ip']}]
+			% endif
+		% endif
+		</h5>
+		% if isstaff :
+		<div class="comment_menu">
+			<ul>
+				<li><a href="${instance._get_action_url()}/${comment['name']}/edit_content">Edit</a></li>
+				<li><a href="${instance._get_action_url()}/${comment['name']}/moderate">Moderate</a></li>
+			</ul>
+		</div>
+		% endif
+		<p>
+		${comment['comment']|h}
+		</p>
+		##<% comments = instance._get_comments() %>
+		##% for comment in comments :
+		##	${show_comment(comment)}
+		##% endfor
+	</div>
+</%def>
+<%def name="show_comments_section(instance)">
+	<% user_auth = instance.__domain__.get_user_auth() %>
+	<% isstaff = 'group.staff@%s' % instance.__domain__['name'] in user_auth['groups'] %>
+	
+	% if 'get_comments' in instance._get_actions():
+		<div class="comments_section_holder">
+			<div class="comments_section">
+				<h3>Commentaires</h3>
+				<div class="comments_holder">
+					<% comments = instance._get_comments() %>
+					<% keys = comments.keys() %>
+					<% keys.sort()%>
+					% for comment in keys :
+						${show_comment(comments[comment],instance,isstaff)}
+					% endfor
+				</div>
+				${show_comment_form(instance)}
+			</div>
+		</div>
+	% endif
+</%def>
+	
