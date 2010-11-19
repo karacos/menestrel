@@ -202,6 +202,7 @@ class Resource(karacos.db['WebNode']):
     def publish_node(self):
         karacos.db['WebNode']._publish_node(self)
         self['ACL']['group.everyone@%s' % self.__domain__['name']].append("add_comment")
+        self['ACL']['group.everyone@%s' % self.__domain__['name']].append("get_comments")
         self.save()
         
     def _add_semantic_tag(self,tag_name=None):
