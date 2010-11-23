@@ -204,7 +204,40 @@ class Resource(karacos.db['WebNode']):
         self['ACL']['group.everyone@%s' % self.__domain__['name']].append("add_comment")
         self['ACL']['group.everyone@%s' % self.__domain__['name']].append("get_comments")
         self.save()
-        
+    
+    def get_instance_template_uri(self):
+        try:
+            if 'resource_template' in self:
+                template = self.__domain__.lookup.get_template(self['resource_template'])
+                return self['resource_template']
+        except:
+            self.log.info("Template %s for resource %s[%s] doesn't exist" % (self['resource_template'],
+                                                        self['name'], self.id) )
+            pass
+        return karacos.db['WebNode'].get_instance_template_uri(self)
+    
+    def _get_set_instance_template_uri_form(self):
+        uri = ""
+        if 'resource_template' in self:
+            uri = self['resource_template']
+        return {'title':_('Modify page template'),
+                'submit':_('Modify'),
+                'fields':[
+                    {'name': 'template_uri','title':_('Template URI'),'dataType': 'TEXT', 'value': uri},
+                    ]}
+         
+    @karacos._db.isaction
+    def set_instance_template_uri(self,template_uri=None):
+        try:
+            template = self.__domain__.lookup.get_template(template_uri)
+            self['resource_template'] = template_uri
+            self.save()
+            return {"status": "success", "message":_("Template changed successfully")}
+        except:
+            return {"status": "failure", "message":_("Template doesn't exist")}
+    set_instance_template_uri.label = _("Set instance template")
+    set_instance_template_uri.get_form = _get_set_instance_template_uri_form
+    
     def _add_semantic_tag(self,tag_name=None):
         """
         Semantic Tags for resource, it's meaning
