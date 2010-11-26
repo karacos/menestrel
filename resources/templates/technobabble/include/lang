@@ -3,7 +3,7 @@
 <% default_lang = karacos.serving.get_session().get_session_lang()[0:2] %>
 <div id="lang_flags">
 <% lang_style = "" %>
-	<img style="${lang_style}" src="/_browser/images/flags/32x32/${codlang}-rotate.png" alt="${lang}"/>
+	
 % for lang in instance.get_content_langs():
 	<% codlang = lang[0:2] %>
 	% if lang == session_lang:
@@ -11,5 +11,5 @@
 	%endif 
 	<img style="${lang_style}" src="/_browser/images/flags/32x32/${codlang}-rotate.png" alt="${lang}"/>
 % endfor
-
+<img style="${lang_style}" src="/_browser/images/flags/32x32/${default_lang}-rotate.png" alt="${default_lang}"/>
 </div>
