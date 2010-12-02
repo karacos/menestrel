@@ -5,6 +5,7 @@ Created on 13 janv. 2010
 '''
 import sys
 import karacos
+import re
 
 class Resource(karacos.db['WebNode']):
     '''
@@ -20,6 +21,8 @@ class Resource(karacos.db['WebNode']):
     def create(parent=None, base=None,data=None):
         assert isinstance(data,dict)
         assert isinstance(parent.__domain__,karacos.db['MDomain'])
+        # some code... avoid bad url name...
+        # data['name'] = re.sub('[^a-z0-9]','_',data['name'].lower())
         if 'WebType' not in data:
             data['WebType'] = 'Resource'
         return karacos.db['WebNode'].create(parent=parent,base=base,data=data)
