@@ -122,7 +122,7 @@ class MDomain(karacos.db['Domain']):
             return {'status':'failure', 'message':_('Adresse email invalide'),
                     'errors':{'email':_('This is not a valid mail address')}}
             
-        return {'status':'success', 'message':_("Authentification r&eacute;ussie"),'data':user}
+        return {'status':'success', 'message':_("Authentification r&eacute;ussie"),'data':user,'success': True}
     login.get_form = _get_login_form
     login.label = _('S\'authentifier')
     
