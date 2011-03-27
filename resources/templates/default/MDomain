@@ -5,12 +5,8 @@
 <div class="main-content"  lang="${session.get_session_lang()}" typeof="karacos:Domain" about="urn:uuid:http://${instance.__domain__['fqdn']}${instance._get_action_url()}">
 		<h1 class="block" id="domain_title" property="title">${instance.__get_title__()}</h1>
         <div class="column1-unit">
-        <div id="domain_content" property="content">${instance.__get_content__()}</div> 
+        <div property="content">${instance.__get_content__()}</div> 
         </div>
-    	<div class="hidden_property" property="stylesheets">${instance['stylesheets']}</div>
-    	<div class="hidden_property" property="editor">${instance['editor']}</div>
-    	<div class="hidden_property" property="keywords">${instance['keywords']}</div>
-    	<div class="hidden_property" property="description">${instance['description']}</div>
 	</div>
 	
 	

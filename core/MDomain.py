@@ -37,6 +37,9 @@ class MDomain(karacos.db['Domain']):
         self.save()
         if 'register' not in self['ACL']['user.anonymous@%s'%self['name']]:
             self['ACL']['user.anonymous@%s'%self['name']].append('register')
+        if '_process_facebook_cookie' not in self['ACL']['user.anonymous@%s'%self['name']]:
+            self['ACL']['user.anonymous@%s'%self['name']].append('_process_facebook_cookie')
+        
         if 'validate_user' not in self['ACL']['user.anonymous@%s'%self['name']]:
             self['ACL']['user.anonymous@%s'%self['name']].append('validate_user')
         if 'group.everyone@%s' % self['name'] in self['ACL']:
@@ -44,8 +47,12 @@ class MDomain(karacos.db['Domain']):
                 self['ACL']['group.everyone@%s' % self['name']].append('modify_person_data')
             if 'create_password' not in self['ACL']['group.everyone@%s' % self['name']]:
                 self['ACL']['group.everyone@%s' % self['name']].append('create_password')
+            if '_process_facebook_cookie' not in self['ACL']['group.everyone@%s'%self['name']]:
+                self['ACL']['group.everyone@%s'%self['name']].append('_process_facebook_cookie')
+            if 'fragment' not in self['ACL']['group.everyone@%s'%self['name']]:
+                self['ACL']['group.everyone@%s'%self['name']].append('fragment')
         else:
-            self['ACL']['group.everyone@%s' % self['name']] = ['modify_person_data','create_password']
+            self['ACL']['group.everyone@%s' % self['name']] = ['modify_person_data','create_password','_process_facebook_cookie']
         if u'group.registered@%s' % self['name'] in self['ACL']:
             if 'create_user_profile' not in self['ACL'][u'group.registered@%s' % self['name']]:
                 self['ACL'][u'group.registered@%s' % self['name']].append('create_user_profile')
@@ -122,7 +129,7 @@ class MDomain(karacos.db['Domain']):
             return {'status':'failure', 'message':_('Adresse email invalide'),
                     'errors':{'email':_('This is not a valid mail address')}}
             
-        return {'status':'success', 'message':_("Authentification r&eacute;ussie"),'data':user,'success': True}
+        return {'status':'success', 'message':_("Authentification r&eacute;ussie"),'data':self._get_user_actions_forms(),'success': True}
     login.get_form = _get_login_form
     login.label = _('S\'authentifier')
     
@@ -158,7 +165,30 @@ class MDomain(karacos.db['Domain']):
         else: #result['status'] == 'failure'
             
             return result
-
+    
+    @karacos._db.isaction
+    def _process_facebook_cookie(self):
+        """
+        """
+        import facebook
+        cookie = facebook.get_user_from_cookie(
+                karacos.serving.get_request().cookies, '61168221137', '948992e9e52d811589442fce4c0cd0b3')
+        graph = facebook.GraphAPI(cookie['access_token'])
+        fbuser = graph.get_object("me")
+        fbfriends = graph.get_connections(fbuser["id"], "friends")
+        fblikes = graph.get_connections(fbuser["id"], "likes")
+        user = self.get_user_by_name(fbuser['email'])
+        if user == None:
+            user = self._create_user(username=fbuser['email'])
+        user.update(fbuser)
+        user['name'] = fbuser['email']
+        user['full_name'] = fbuser['name']
+        if 'group.registered@%s' % self['name'] not in user['groups']:
+            user['groups'].append('group.registered@%s' % self['name'])
+        user.save()
+        karacos.serving.get_session()._set_user_auth_(user)
+        return self._get_user_actions_forms()
+    
     @karacos._db.isaction
     def _unregister(self,email,validation):
         """
@@ -435,7 +465,7 @@ class MDomain(karacos.db['Domain']):
         return form
     
     @karacos._db.isaction
-    def edit_content(self,title=None,content=None,stylesheets=None, description=None, keywords=None):
+    def edit_content(self,title=None,content=None,stylesheets=None, description=None, keywords=None, lang=None):
         """
         Basic content modification for MDomain
         """

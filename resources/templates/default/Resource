@@ -2,15 +2,12 @@
 
 <% user_auth = instance.__domain__.get_user_auth() %>
 <% isstaff = 'anonymous@%s' % instance.__domain__['name'] != user_auth['name'] %>
-
-	<h1 id="resource_title">
-		${instance.__get_title__()}
-	</h1>
-	<div id="resource_content">
-	${instance.__get_content__()}
-	</div>
-	<ul>
-	<% childrens = instance.get_web_childrens_for_id() %>
+<div typeof="karacos:Resource" about="urn:uuid:http://${instance.__domain__['fqdn']}${instance._get_action_url()}">
+		<h1 property="title">${instance.__get_title__()}</h1>
+		<div property="content">${instance.__get_content__()}</div>
+		<ul>
+		<% childrens = instance.get_web_childrens_for_id() %>
+		
 	
-
-${self.comment.show_comments_section(instance)}
+	${self.comment.show_comments_section(instance)}
+</div>
