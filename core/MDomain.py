@@ -261,13 +261,15 @@ class MDomain(karacos.db['Domain']):
     
     def _get_person_data(self):
         user = self.__domain__.get_user_auth()
+        return self._get_person_data_user(user)
+        
+    def _get_person_data_user(self, user):
         assert user['name'] != self.__domain__._get_anonymous_user()['name']
         if 'personData' not in user.__childrens__:
             personData = {'name':'personData'}
             karacos.db['Person'].create(user=user, base=None,data=personData)
         return user.db[user['childrens']['personData']]
         
-
     def _register(self,email=None,password=None):
         """
         """
