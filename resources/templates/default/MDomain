@@ -2,11 +2,8 @@
 <% isstaff = 'anonymous@%s' % instance.__domain__['name'] != user_auth['name'] %>
 <% import karacos %>
 <% session = karacos.serving.get_session() %>
-<div class="main-content"  lang="${session.get_session_lang()}" typeof="karacos:Domain" about="urn:uuid:http://${instance.__domain__['fqdn']}${instance._get_action_url()}">
-		<h1 class="block" id="domain_title" property="title">${instance.__get_title__()}</h1>
-        <div class="column1-unit">
-        <div property="content">${instance.__get_content__()}</div> 
-        </div>
-	</div>
-	
-	
+<article class="inside" lang="${session.get_session_lang()}" typeof="karacos:${instance._get_type()}" about="urn:uuid:${instance.id}">
+		<div style="display:none" property="url">${instance._get_action_url()}</div>
+		<h1 class="kc_property inside" property="title">${instance.__get_title__()}</h1>
+        <div class="kc_property inside" property="content">${instance.__get_content__()}</div> 
+</article>
