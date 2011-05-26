@@ -218,10 +218,15 @@ class MDomain(karacos.db['Domain']):
         }
     
     @karacos._db.isaction
-    def modify_person_data(self):
+    def modify_person_data(self,*args,**kw):
         """
         """
-        pass
+        user = self.__domain__.get_user_auth()
+        userdata = self._get_person_data_user(user)
+        for k in kw:
+            userdata[k] = kw[k]
+            userdata.save()
+        return {'success': True, 'message': "Userdata modified", 'data': userdata}
     
     @karacos._db.isaction
     def user_profile_exist(self,name):
