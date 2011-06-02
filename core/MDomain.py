@@ -250,6 +250,24 @@ class MDomain(karacos.db['Domain']):
     rename_user_profiles_node.label = _("rename_user_profiles_node")
     
     @karacos._db.isaction
+    def _settings(self,*args,**kw):
+        if 'fb_appId' in kw:
+            if kw['fb_appId'] != '':
+                self['fb_appId'] = kw['fb_appId']
+        
+        self.save()
+        return {'status': 'success', 'success': True, 'message': _('Domain settings updated')}
+    
+    def get_settings_form(self):
+        fb_appId = ''
+        if 'fb_appId' in self:
+            fb_appId = self['fb_appId']
+        return {'title': _("Domain settings"),
+         'submit': _('Appliquer'),
+         'fields': [{'name':'fb_appId', 'title':'Id app Facebook','dataType': 'TEXT', 'value':fb_appId},
+                    ]}
+    _settings.get_form = get_settings_form
+    @karacos._db.isaction
     def create_user_profile(self,type='Profile',name=None):
         """
         """
