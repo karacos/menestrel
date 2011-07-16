@@ -254,7 +254,24 @@ class MDomain(karacos.db['Domain']):
         if 'fb_appId' in kw:
             if kw['fb_appId'] != '':
                 self['fb_appId'] = kw['fb_appId']
-        
+        if 'site_email_from' in kw:
+            if kw['site_email_from'] != '':
+                self['site_email_from'] = kw['site_email_from']
+        if 'site_email_service_host' in kw:
+            if kw['site_email_service_host'] != '':
+                self['site_email_service_host'] = kw['site_email_service_host']
+        if 'site_email_service_port' in kw:
+            if kw['site_email_service_port'] != '':
+                self['site_email_service_port'] = kw['site_email_service_port']
+        if 'site_email_service_username' in kw:
+            if kw['site_email_service_username'] != '':
+                self['site_email_service_username'] = kw['site_email_service_username']
+        if 'site_email_service_password' in kw:
+            if kw['site_email_service_password'] != '':
+                self['site_email_service_password'] = kw['site_email_service_password']
+        if 'site_email_service_secure' in kw:
+            if kw['site_email_service_secure'] != '':
+                self['site_email_service_secure'] = kw['site_email_service_secure']
         self.save()
         return {'status': 'success', 'success': True, 'message': _('Domain settings updated')}
     
@@ -262,9 +279,35 @@ class MDomain(karacos.db['Domain']):
         fb_appId = ''
         if 'fb_appId' in self:
             fb_appId = self['fb_appId']
+        site_email_from = ''
+        if 'site_email_from' in self:
+            site_email_from = self['site_email_from']
+        site_email_service_host = ''
+        if 'site_email_service_host' in self:
+            site_email_service_host = self['site_email_service_host']
+        site_email_service_port = ''
+        if 'site_email_service_port' in self:
+            site_email_service_port = self['site_email_service_port']
+        site_email_service_username = ''
+        if 'site_email_service_username' in self:
+            site_email_service_username = self['site_email_service_username']
+        site_email_service_password = ''
+        if 'site_email_service_password' in self:
+            site_email_service_password = self['site_email_service_password']
+        site_email_service_secure = ''
+        if 'site_email_service_secure' in self:
+            site_email_service_secure = self['site_email_service_secure']
+                
         return {'title': _("Domain settings"),
          'submit': _('Appliquer'),
          'fields': [{'name':'fb_appId', 'title':'Id app Facebook','dataType': 'TEXT', 'value':fb_appId},
+                    {'name':'site_email_from', 'title':'Expediteur email','dataType': 'TEXT', 'value':site_email_from},
+                    {'name':'site_email_service_host', 'title':'Serveur service mail','dataType': 'TEXT', 'value':site_email_service_host},
+                    {'name':'site_email_service_port', 'title':'Port service mail','dataType': 'TEXT', 'value':site_email_service_port},
+                    {'name':'site_email_service_username', 'title':'User service mail','dataType': 'TEXT', 'value':site_email_service_username},
+                    {'name':'site_email_service_password', 'title':'User service mail','dataType': 'TEXT', 'value':site_email_service_password},
+                    {'name':'site_email_service_secure', 'title':'Use secure','dataType': 'TEXT', 'value':site_email_service_secure},
+                    
                     ]}
     _settings.get_form = get_settings_form
     @karacos._db.isaction
@@ -400,7 +443,7 @@ class MDomain(karacos.db['Domain']):
         message.attach(MIMEText(body, 'html'))
         self.log.debug("sending mail : %s,%s" % (user['name'],user['validation']))
         try:
-            karacos.core.mail.send_mail(user['name'],message.as_string())
+            karacos.core.mail.send_domain_mail(self,user['name'],message.as_string())
             self.log.info("mail successfully sent to %s" % user['name'])
         except:
             self.log.warn("error while sending mail to %s" % user['name'])
