@@ -177,6 +177,7 @@ class MDomain(karacos.db['Domain']):
                 karacos.serving.get_request().cookies, self['fb_appId'], self['fb_appKey'])
         graph = facebook.GraphAPI(cookie['access_token'])
         fbuser = graph.get_object("me")
+        self.log.info(fbuser)
         user = self.get_user_by_name(fbuser['email'])
         if user == None:
             user = self._create_user(username=fbuser['email'])
