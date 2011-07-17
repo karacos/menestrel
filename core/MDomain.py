@@ -177,12 +177,11 @@ class MDomain(karacos.db['Domain']):
                 karacos.serving.get_request().cookies, self['fb_appId'], self['fb_appKey'])
         graph = facebook.GraphAPI(cookie['access_token'])
         fbuser = graph.get_object("me")
-        self.log.info(fbuser)
-        user = self.get_user_by_name(fbuser['email'])
+        user = self.get_user_by_name(fbuser['name'])
         if user == None:
-            user = self._create_user(username=fbuser['email'])
+            user = self._create_user(username=fbuser['name'])
         user.update(fbuser)
-        user['name'] = fbuser['email']
+        user['name'] = fbuser['name']
         user['full_name'] = fbuser['name']
         if 'group.registered@%s' % self['name'] not in user['groups']:
             user['groups'].append('group.registered@%s' % self['name'])
