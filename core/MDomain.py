@@ -105,7 +105,8 @@ class MDomain(karacos.db['Domain']):
         },
         {'title': _("Pas encore inscrit ?"),
          'submit': _("S'enregistrer"),
-         'fields': [{'name':'register', 'title':"Creez votre identifiant",'dataType': 'HIDDEN', 'value': 'register'}]
+         'fields': [{'name':'email', 'title':'Addresse email','dataType': 'TEXT'},
+                    {'name':'register', 'title':"Creez votre identifiant",'dataType': 'HIDDEN', 'value': 'register'}]
         },]
         return result
     
@@ -114,7 +115,8 @@ class MDomain(karacos.db['Domain']):
         """
         """
         if 'register' in kw:
-            raise karacos.http.Redirect('/register',301)
+            assert 'email' in kw
+            return self._register(kw['email'])
         assert 'email' in kw
         assert 'password' in kw
         user = None
@@ -262,13 +264,13 @@ class MDomain(karacos.db['Domain']):
                 self['site_email_service_host'] = kw['site_email_service_host']
         if 'site_email_service_port' in kw:
             if kw['site_email_service_port'] != '':
-                self['site_email_service_port'] = kw['site_email_service_port']
+                self['site_email_service_port'] = int(kw['site_email_service_port'])
         if 'site_email_service_username' in kw:
             if kw['site_email_service_username'] != '':
-                self['site_email_service_username'] = kw['site_email_service_username']
+                self['site_email_service_username'] = str(kw['site_email_service_username'])
         if 'site_email_service_password' in kw:
             if kw['site_email_service_password'] != '':
-                self['site_email_service_password'] = kw['site_email_service_password']
+                self['site_email_service_password'] =str( kw['site_email_service_password'])
         if 'site_email_service_secure' in kw:
             if kw['site_email_service_secure'] != '':
                 self['site_email_service_secure'] = kw['site_email_service_secure']
@@ -305,7 +307,7 @@ class MDomain(karacos.db['Domain']):
                     {'name':'site_email_service_host', 'title':'Serveur service mail','dataType': 'TEXT', 'value':site_email_service_host},
                     {'name':'site_email_service_port', 'title':'Port service mail','dataType': 'TEXT', 'value':site_email_service_port},
                     {'name':'site_email_service_username', 'title':'User service mail','dataType': 'TEXT', 'value':site_email_service_username},
-                    {'name':'site_email_service_password', 'title':'User service mail','dataType': 'TEXT', 'value':site_email_service_password},
+                    {'name':'site_email_service_password', 'title':'User service password','dataType': 'PASSWORD', 'value':site_email_service_password},
                     {'name':'site_email_service_secure', 'title':'Use secure','dataType': 'TEXT', 'value':site_email_service_secure},
                     
                     ]}
@@ -352,7 +354,7 @@ class MDomain(karacos.db['Domain']):
                     personData = {'name':'personData'}
                     karacos.db['Person'].create(user=user, base=None,data=personData)
                     self.send_validation(user)
-                    return {'status':'success',
+                    return {'status':'success', 'success': True,
                             'message' : _('Enregistrement reussi'), 'data': user }
                     
                 user = self.get_user_by_name(email)
@@ -364,14 +366,14 @@ class MDomain(karacos.db['Domain']):
                             'errors': None }
                 if user.belongs_to(self._get_confirmed_group()):
                     ""
-                    return {'status':'success',
+                    return {'status':'success', 'success': True,
                             'message' : _('Email/mot de passe connus, user deja valid&eacute;'),
                          'data': user }
                 else:
                     #resend validation
                     ""
                     self.send_validation(user)
-                    return {'status':'success',
+                    return {'status':'success', 'success': True,
                             'message' : _('Email/mot de passe connus, user non valid&eacute, renvoi validation'),
                          'data': user }
             except karacos._db.Exception, e:
@@ -382,7 +384,7 @@ class MDomain(karacos.db['Domain']):
             return {'status':'failure', 'message':_('Adresse email invalide'),
                     'errors':{'email':_('This is not a valid mail address')}}
             
-        return {'status':'success', 'message':_("Enregistrement reussi"),'data':user}
+        return {'status':'success', 'message':_("Enregistrement reussi"),'data':user, 'success': True}
 
 
     def send_validation(self,user):
