@@ -177,8 +177,6 @@ class MDomain(karacos.db['Domain']):
                 karacos.serving.get_request().cookies, '61168221137', '948992e9e52d811589442fce4c0cd0b3')
         graph = facebook.GraphAPI(cookie['access_token'])
         fbuser = graph.get_object("me")
-        fbfriends = graph.get_connections(fbuser["id"], "friends")
-        fblikes = graph.get_connections(fbuser["id"], "likes")
         user = self.get_user_by_name(fbuser['email'])
         if user == None:
             user = self._create_user(username=fbuser['email'])
@@ -253,6 +251,15 @@ class MDomain(karacos.db['Domain']):
     
     @karacos._db.isaction
     def _settings(self,*args,**kw):
+        if 'description' in kw:
+            if kw['description'] != '':
+                self['description'] = kw['description']
+        if 'keywords' in kw:
+            if kw['keywords'] != '':
+                self['keywords'] = kw['keywords']
+        if 'head_bloc' in kw:
+            if kw['head_bloc'] != '':
+                self['head_bloc'] = kw['head_bloc']
         if 'fb_appId' in kw:
             if kw['fb_appId'] != '':
                 self['fb_appId'] = kw['fb_appId']
@@ -284,6 +291,15 @@ class MDomain(karacos.db['Domain']):
         site_email_from = ''
         if 'site_email_from' in self:
             site_email_from = self['site_email_from']
+        description = ''
+        if 'description' in self:
+            description = self['description']
+        keywords = ''
+        if 'keywords' in self:
+            keywords = self['keywords']
+        head_bloc = ''
+        if 'head_bloc' in self:
+            head_bloc = self['head_bloc']
         site_email_service_host = ''
         if 'site_email_service_host' in self:
             site_email_service_host = self['site_email_service_host']
@@ -302,7 +318,10 @@ class MDomain(karacos.db['Domain']):
                 
         return {'title': _("Domain settings"),
          'submit': _('Appliquer'),
-         'fields': [{'name':'fb_appId', 'title':'Id app Facebook','dataType': 'TEXT', 'value':fb_appId},
+         'fields': [{'name':'description', 'title':'Description','dataType': 'TEXT','formType':'TEXTAREA', 'value':description},
+                    {'name':'keywords', 'title':'Mots clef','dataType': 'TEXT', 'value':keywords},
+                    {'name':'head_bloc', 'title':'Additional head bloc','dataType': 'TEXT','formType':'TEXTAREA', 'value':head_bloc},
+                    {'name':'fb_appId', 'title':'Id app Facebook','dataType': 'TEXT', 'value':fb_appId},
                     {'name':'site_email_from', 'title':'Expediteur email','dataType': 'TEXT', 'value':site_email_from},
                     {'name':'site_email_service_host', 'title':'Serveur service mail','dataType': 'TEXT', 'value':site_email_service_host},
                     {'name':'site_email_service_port', 'title':'Port service mail','dataType': 'TEXT', 'value':site_email_service_port},
