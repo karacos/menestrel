@@ -174,7 +174,7 @@ class MDomain(karacos.db['Domain']):
         """
         import facebook
         cookie = facebook.get_user_from_cookie(
-                karacos.serving.get_request().cookies, '61168221137', '948992e9e52d811589442fce4c0cd0b3')
+                karacos.serving.get_request().cookies, self['fb_appId'], self['fb_appKey'])
         graph = facebook.GraphAPI(cookie['access_token'])
         fbuser = graph.get_object("me")
         user = self.get_user_by_name(fbuser['email'])
@@ -263,6 +263,9 @@ class MDomain(karacos.db['Domain']):
         if 'fb_appId' in kw:
             if kw['fb_appId'] != '':
                 self['fb_appId'] = kw['fb_appId']
+        if 'fb_appKey' in kw:
+            if kw['fb_appKey'] != '':
+                self['fb_appKey'] = kw['fb_appKey']
         if 'site_email_from' in kw:
             if kw['site_email_from'] != '':
                 self['site_email_from'] = kw['site_email_from']
@@ -288,6 +291,9 @@ class MDomain(karacos.db['Domain']):
         fb_appId = ''
         if 'fb_appId' in self:
             fb_appId = self['fb_appId']
+        fb_appKey = ''
+        if 'fb_appKey' in self:
+            fb_appKey = self['fb_appKey']
         site_email_from = ''
         if 'site_email_from' in self:
             site_email_from = self['site_email_from']
@@ -322,6 +328,7 @@ class MDomain(karacos.db['Domain']):
                     {'name':'keywords', 'title':'Mots clef','dataType': 'TEXT', 'value':keywords},
                     {'name':'head_bloc', 'title':'Additional head bloc','dataType': 'TEXT','formType':'TEXTAREA', 'value':head_bloc},
                     {'name':'fb_appId', 'title':'Id app Facebook','dataType': 'TEXT', 'value':fb_appId},
+                    {'name':'fb_appKey', 'title':'Clef app Facebook','dataType': 'TEXT', 'value':fb_appKey},
                     {'name':'site_email_from', 'title':'Expediteur email','dataType': 'TEXT', 'value':site_email_from},
                     {'name':'site_email_service_host', 'title':'Serveur service mail','dataType': 'TEXT', 'value':site_email_service_host},
                     {'name':'site_email_service_port', 'title':'Port service mail','dataType': 'TEXT', 'value':site_email_service_port},
