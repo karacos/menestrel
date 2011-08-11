@@ -51,13 +51,17 @@ class MDomain(karacos.db['Domain']):
                 self['ACL']['group.everyone@%s'%self['name']].append('_process_facebook_cookie')
             if 'fragment' not in self['ACL']['group.everyone@%s'%self['name']]:
                 self['ACL']['group.everyone@%s'%self['name']].append('fragment')
+            if 'set_user_email' not in self['ACL'][u'group.everyone@%s' % self['name']]:
+                self['ACL'][u'group.everyone@%s' % self['name']].append('set_user_email')
         else:
-            self['ACL']['group.everyone@%s' % self['name']] = ['modify_person_data','create_password','_process_facebook_cookie']
+            self['ACL']['group.everyone@%s' % self['name']] = ['modify_person_data','create_password','_process_facebook_cookie','set_user_email']
         if u'group.registered@%s' % self['name'] in self['ACL']:
             if 'create_user_profile' not in self['ACL'][u'group.registered@%s' % self['name']]:
                 self['ACL'][u'group.registered@%s' % self['name']].append('create_user_profile')
             if 'create_password' not in self['ACL'][u'group.registered@%s' % self['name']]:
                 self['ACL'][u'group.registered@%s' % self['name']].append('create_password')
+        else:
+            self['ACL'][u'group.registered@%s' % self['name']] = ['create_user_profile', 'create_password']
         self.save()
         """ SAME as in Domains
         if '_attachments' not in self:
@@ -251,6 +255,12 @@ class MDomain(karacos.db['Domain']):
     
     @karacos._db.isaction
     def _settings(self,*args,**kw):
+        if 'require_login_mail' in kw:
+            if kw['require_login_mail'] != '':
+                if kw['require_login_mail'].lower() == 'true':
+                    self['require_login_mail'] = True
+                else:
+                    self['require_login_mail'] = False
         if 'description' in kw:
             if kw['description'] != '':
                 self['description'] = kw['description']
@@ -321,6 +331,12 @@ class MDomain(karacos.db['Domain']):
         site_email_service_secure = ''
         if 'site_email_service_secure' in self:
             site_email_service_secure = self['site_email_service_secure']
+        require_login_mail = 'true'
+        if 'require_login_mail' in self:
+            if self['require_login_mail']:
+                require_login_mail = 'true'
+            else:
+                require_login_mail = 'false'
                 
         return {'title': _("Domain settings"),
          'submit': _('Appliquer'),
@@ -335,7 +351,7 @@ class MDomain(karacos.db['Domain']):
                     {'name':'site_email_service_username', 'title':'User service mail','dataType': 'TEXT', 'value':site_email_service_username},
                     {'name':'site_email_service_password', 'title':'User service password','dataType': 'PASSWORD', 'value':site_email_service_password},
                     {'name':'site_email_service_secure', 'title':'Use secure','dataType': 'TEXT', 'value':site_email_service_secure},
-                    
+                    {'name':'require_login_mail', 'title':'Require mail login','dataType': 'TEXT', 'value':require_login_mail},
                     ]}
     _settings.get_form = get_settings_form
     @karacos._db.isaction
@@ -363,66 +379,82 @@ class MDomain(karacos.db['Domain']):
             personData = {'name':'personData'}
             karacos.db['Person'].create(user=user, base=None,data=personData)
         return user.db[user['childrens']['personData']]
-        
+    
+    def _register_user(self, email=None, password=None):
+        try:
+            user = None
+            if not self.user_exist(email):
+                self._create_user(email,password)
+                user = self.get_user_by_name(email)
+                self._get_registered_group().add_user(user)
+                self._get_everyone_group().add_user(user)
+                user = self.get_user_by_name(email)
+                personData = {'name':'personData'}
+                karacos.db['Person'].create(user=user, base=None,data=personData)
+                self.send_validation(user)
+                return {'status':'success', 'success': True,
+                        'message' : _('Enregistrement reussi'), 'data': user }
+                
+            user = self.get_user_by_name(email)
+            if password != None:
+                passwordhash = "%s" % karacos.db['User'].hash_pwd(password)
+                if not user['password'] == passwordhash:
+                    return {'status':'failure',
+                            'message' : _('Erreur, email connue mais mot de passe incorrect'),
+                        'errors': None }
+            if user.belongs_to(self._get_confirmed_group()):
+                ""
+                return {'status':'success', 'success': True,
+                        'message' : _('Email/mot de passe connus, user deja valid&eacute;'),
+                     'data': user }
+            else:
+                #resend validation
+                ""
+                self.send_validation(user)
+                return {'status':'success', 'success': True,
+                        'message' : _('Email/mot de passe connus, user non valid&eacute, renvoi validation'),
+                     'data': user }
+        except karacos._db.Exception, e:
+            
+            return {'status':'failure', 'message' : '%s' % e.parameter,
+                    'errors': None }
+            
     def _register(self,email=None,password=None):
         """
         """
         user = None
-        if karacos.core.mail.valid_email(email):
-            try:
-                user = None
-                if not self.user_exist(email):
-                    self._create_user(email,password)
-                    user = self.get_user_by_name(email)
-                    self._get_registered_group().add_user(user)
-                    self._get_everyone_group().add_user(user)
-                    user = self.get_user_by_name(email)
-                    personData = {'name':'personData'}
-                    karacos.db['Person'].create(user=user, base=None,data=personData)
-                    self.send_validation(user)
-                    return {'status':'success', 'success': True,
-                            'message' : _('Enregistrement reussi'), 'data': user }
-                    
-                user = self.get_user_by_name(email)
-                if password != None:
-                    passwordhash = "%s" % karacos.db['User'].hash_pwd(password)
-                    if not user['password'] == passwordhash:
-                        return {'status':'failure',
-                                'message' : _('Erreur, email connue mais mot de passe incorrect'),
-                            'errors': None }
-                if user.belongs_to(self._get_confirmed_group()):
-                    ""
-                    return {'status':'success', 'success': True,
-                            'message' : _('Email/mot de passe connus, user deja valid&eacute;'),
-                         'data': user }
+        
+        if 'require_login_mail' in self:
+            if bool(self['require_login_mail']):
+                if karacos.core.mail.valid_email(email):
+                    return self._register_user(email, password)
                 else:
-                    #resend validation
-                    ""
-                    self.send_validation(user)
-                    return {'status':'success', 'success': True,
-                            'message' : _('Email/mot de passe connus, user non valid&eacute, renvoi validation'),
-                         'data': user }
-            except karacos._db.Exception, e:
+                    return {'status':'failure', 'message':_('Adresse email invalide'),
+                            'errors':{'email':_('This is not a valid mail address')}}
+            else:
+                return self._register_user(email, password)
                 
-                return {'status':'failure', 'message' : '%s' % e.parameter,
-                        'errors': None }
-        else:
-            return {'status':'failure', 'message':_('Adresse email invalide'),
-                    'errors':{'email':_('This is not a valid mail address')}}
             
         return {'status':'success', 'message':_("Enregistrement reussi"),'data':user, 'success': True}
 
+    @karacos._db.isaction
+    def set_user_email(self, email=None):
+        assert self.__domain__.is_user_authenticated() , _("Unavailable to anonymous user")
+        user = self.__domain__.get_user_auth()
+        user._set_email(email)
+        return {'success': True}
+        
 
     def send_validation(self,user):
         """
         send the validation mail to user
         """
-        if not karacos.core.mail.valid_email(user['name']):
-            return False
         if 'validation' not in user:
             user['validation'] = "%s" % uuid4().hex
         user.save()
-        self.log.info("Sending validation to : %s with validation '%s'" % (user['name'], user['validation']))
+        self.log.info("Validation for %s : '%s'" % (user['name'], user['validation']))
+        if not karacos.core.mail.valid_email(user['name']):
+            return False
         message = MIMEMultipart()
         message['From'] = self['mail_register_from_addr']
         message['To'] = user['name']
