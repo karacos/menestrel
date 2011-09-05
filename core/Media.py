@@ -27,7 +27,7 @@ class Media(karacos.db['Resource']):
         self['media'] = att_file.filename
         self.save()
         self.__media_name__ = self['media']
-        #return result
+        return result
     
     @karacos._db.isaction
     def _media(self):
