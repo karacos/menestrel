@@ -16,7 +16,7 @@
 
 % if instance != None:
 <% node_actions = instance.__domain__._get_actions() %>
-(function(submenu){
+(function mDomainSubMenu(submenu){
 	var 
 		item,
 		actionwindow = KaraCos.actionMenu.actionWindow;
