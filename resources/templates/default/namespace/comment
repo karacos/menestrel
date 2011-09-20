@@ -1,4 +1,4 @@
-<%namespace name="form" file="/default/namespace/form"/>
+<%namespace name="form" file="/default/namespace/form.ns"/>
 
 <%def name="show_comment_form(instance)">
 	% if 'add_comment' in instance._get_actions():
@@ -56,6 +56,10 @@
 				${show_comment_form(instance)}
 			</div>
 		</div>
+		<script language="javascript" src="/m_design/js/comments.js"></script>
+		<script language="javascript">
+		console.log("inside comment template");
+		</script>
 	% endif
 </%def>
 	
