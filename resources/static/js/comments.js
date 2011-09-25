@@ -1,5 +1,3 @@
-console.log("inside comments script");
-
 function createCommentsObject(){
 	KaraCos.comments = {
 		'initialize': function(res_url,container) {
@@ -28,8 +26,12 @@ function createCommentsObject(){
 		}
 	}
 }
-KaraCos(function(){
-	if (typeof KaraCos.comments === "undefined") {
-		createCommentsObject();
-	}
+require(["karacos/jquery"],function(){
+	$('body').bind('karacosCoreLoaded', function(){
+		KaraCos(function(){
+			if (typeof KaraCos.comments === "undefined") {
+				createCommentsObject();
+			}
+		})
+	});
 });
