@@ -26,7 +26,7 @@ function createCommentsObject(){
 		}
 	}
 }
-require(["karacos/jquery"],function(){
+require(["karacos/jquery"],function($){
 	$('body').bind('karacosCoreLoaded', function(){
 		KaraCos(function(){
 			if (typeof KaraCos.comments === "undefined") {

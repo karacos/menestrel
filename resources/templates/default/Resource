@@ -9,7 +9,7 @@ request = karacos.serving.get_request()
 %>
 <% user_auth = instance.__domain__.get_user_auth() %>
 <% isstaff = 'anonymous@%s' % instance.__domain__['name'] != user_auth['name'] %>
-<div typeof="karacos:Resource" about="urn:uuid:${instance.id}">
+<div typeof="karacos:Resource" about="urn:uuid:${instance.id}" url="${instance._get_action_url()}">
 		<h1 property="title">${instance.__get_title__()}</h1>
 		<div property="content">${instance.__get_content__()}</div>
 		<ul>
@@ -21,7 +21,7 @@ request = karacos.serving.get_request()
 
 <script language="javascript">
 require(["karacos/jquery"],
-function(){
+function($){
 	$('body').bind('karacosReady', function(){
 	% if 'karacos-fragment' in request.headers or 'Karacos-Fragment' in request.headers:
 		KaraCos.change_page({

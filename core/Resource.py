@@ -241,6 +241,12 @@ class Resource(karacos.db['WebNode']):
     set_instance_template_uri.label = _("Set instance template")
     set_instance_template_uri.get_form = _get_set_instance_template_uri_form
     
+    @karacos._db.isaction
+    def _update(self,*args, **kw):
+        if 'content' not in self:
+            self['content'] = ""
+        return self._update_(*args, **kw)
+    
     def _add_semantic_tag(self,tag_name=None):
         """
         Semantic Tags for resource, it's meaning
