@@ -243,7 +243,9 @@ class Resource(karacos.db['WebNode']):
     
     @karacos._db.isaction
     def _update(self,*args, **kw):
-        if 'content' not in self:
+        if 'title' not in self and 'title' in kw:
+            self['title'] = ""
+        if 'content' not in self and 'content' in kw:
             self['content'] = ""
         return self._update_(*args, **kw)
     
