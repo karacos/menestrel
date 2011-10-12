@@ -102,12 +102,12 @@ class MDomain(karacos.db['Domain']):
     def _get_login_form(self):
         """
         """
-        result = [{'title': _("Connexion"),
+        result = [{'title': _("Vous connecter directement au site (Connexion)"),
          'submit': _('Valider'),
          'fields': [{'name':'email', 'title':'Addresse email','dataType': 'TEXT'},
                     {'name':'password', 'title':'Mot de passe','dataType': 'PASSWORD'}]
         },
-        {'title': _("Pas encore inscrit ?"),
+        {'title': _("Cr&eacute;er un compte (Pas encore inscrit ?)"),
          'submit': _("S'enregistrer"),
          'fields': [{'name':'email', 'title':'Addresse email','dataType': 'TEXT'},
                     {'name':'register', 'title':"Creez votre identifiant",'dataType': 'HIDDEN', 'value': 'register'}]
