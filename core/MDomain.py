@@ -528,6 +528,7 @@ class MDomain(karacos.db['Domain']):
         """
         Creates a node in manager/messages
         """
+        """
         if 'manager' not in self.__childrens__:
             karacos.db['Manager'].create(base=None, parent=self,
                                       data={'name':'manager'})
@@ -541,6 +542,16 @@ class MDomain(karacos.db['Domain']):
                 'type': 'MDMessage'
                 }
         manager._create_workflow_item(data)
+        """
+        msg = MIMEMultipart()
+        msg['From'] = self['site_email_service_username']
+        msg['To'] = self['site_email_service_username']
+        msg['Subject'] = _("Message du site")
+        msg.attach(MIMEText(""" <h2>Message envoye par %s (%s)</h2>
+        <h3>subject: %s</h3>
+        <p>message: %s</p>
+        """ % (sender_name, sender_email, subject, message), 'html'));
+        karacos.core.mail.send_domain_mail(self, self['site_email_service_username'], msg.as_string())
         
     _simple_message.form = {'title': _("Envoyer un message"),
          'submit': _('Valider'),
