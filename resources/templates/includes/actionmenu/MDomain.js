@@ -69,7 +69,7 @@
 									error: function(data) {
 										
 									}
-								}); // POST login form
+								}); // POST form
 							}
 						},
 						]}).show();
