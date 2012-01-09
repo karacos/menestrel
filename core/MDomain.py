@@ -424,19 +424,18 @@ class MDomain(karacos.db['Domain']):
         """
         user = None
         
-        if 'require_login_mail' in self:
-            if bool(self['require_login_mail']):
-                if karacos.core.mail.valid_email(email):
-                    return self._register_user(email, password)
-                else:
-                    return {'status':'failure', 'message':_('Adresse email invalide'),
-                            'errors':{'email':_('This is not a valid mail address')}}
-            else:
+        if 'require_login_mail' not in self:
+            self['require_login_mail'] = False
+        if bool(self['require_login_mail']):
+            if karacos.core.mail.valid_email(email):
                 return self._register_user(email, password)
+            else:
+                return {'status':'failure', 'message':_('Adresse email invalide'),
+                        'errors':{'email':_('This is not a valid mail address')}}
+        else:
+            return self._register_user(email, password)
                 
-            
-        return {'status':'success', 'message':_("Enregistrement reussi"),'data':user, 'success': True}
-
+        
     @karacos._db.isaction
     def set_user_email(self, email=None):
         assert self.__domain__.is_user_authenticated() , _("Unavailable to anonymous user")
@@ -452,7 +451,8 @@ class MDomain(karacos.db['Domain']):
         if 'validation' not in user:
             user['validation'] = "%s" % uuid4().hex
         user.save()
-        self.log.info("Validation for %s : '%s'" % (user['name'], user['validation']))
+        self.log.error("Validation for %s : '%s'" % (user['name'], user['validation']))
+        self.log.error("Validation url: /?method=validate_user&email=%s&validation=%s" % (user['name'], user['validation']))
         if not karacos.core.mail.valid_email(user['name']):
             return False
         message = MIMEMultipart()
