@@ -571,6 +571,7 @@ class MDomain(karacos.db['Domain']):
                 else:
                     self._get_registered_group().remove_user(user)
                     self._get_confirmed_group().add_user(user)
+                    user._set_email(email)
                     return {'status':'success', 'message': _("Confirmation email reussie"), 'data':{}}
                     
         else:

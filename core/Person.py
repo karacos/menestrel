@@ -20,7 +20,7 @@ class Person(karacos.db['Node']):
 
 
     def __init__(self,parent=None,base=None,data=None):
-        assert isinstance(parent,karacos.db['User']), "parent must be of type User"
+        assert isinstance(parent,karacos.db['User']), "Person: parent must be of type User"
         karacos.db['Node'].__init__(self,parent=parent,base=base,data=data)
 
     @staticmethod
