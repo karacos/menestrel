@@ -600,7 +600,7 @@ class MDomain(karacos.db['Domain']):
                     {'name': 'keywords','title':_('Mots clef SEO'),'dataType': 'TEXT','value': self['keywords']},
                     {'name': 'description','title':_('Description SEO'),'dataType': 'TEXT', 'formType': 'TEXTAREA','value': self['description']},
                     {'name':'content', 'title':_('Contenu'), 'dataType': 'TEXT', 'formType': self['editor'], 'value': self['content']},
-                    {'name':'lang', 'title':_('Langage'), 'dataType': 'TEXT', 'formType': 'TEXT', 'value': self.get_default_site_language()}
+                    {'name':'lang', 'title':_('Langage'), 'dataType': 'TEXT', 'value': self.get_default_site_language()}
                     
                         ]}
         
