@@ -201,12 +201,15 @@ class Resource(karacos.db['WebNode']):
     edit_content.get_form = _get_edit_resource_content_form
     edit_content.label = _('Modifier la page')
     
-    @karacos._db.isaction
-    def publish_node(self):
+    def _publish_node(self):
         karacos.db['WebNode']._publish_node(self)
         self['ACL']['group.everyone@%s' % self.__domain__['name']].append("add_comment")
         self['ACL']['group.everyone@%s' % self.__domain__['name']].append("get_comments")
         self.save()
+    
+    @karacos._db.isaction
+    def publish_node(self):
+        self._publish_node()
     
     def get_instance_template_uri(self):
         try:

@@ -4,7 +4,7 @@ Created on 13 janv. 2010
 @author: nico
 '''
 
-import karacos
+import karacos, datetime, re
 class Entry(karacos.db['Resource']):
     '''
     Basic Entry resource
@@ -43,7 +43,7 @@ class Entry(karacos.db['Resource']):
                 'submit':'Modifier',
                 'fields':[
                     {'name':'title', 'title':_('Titre'), 'dataType': 'TEXT', 'value': self['title']},
-                    {'name':'message', 'title':_('Message'), 'dataType': 'TEXT', 'formType': 'WYSIWYG', 'value': self['message']}
+                    {'name':'message', 'title':_('Message'), 'dataType': 'TEXT', 'formType': 'WYSIWYG', 'value': self['content']}
                         ]}
         
         return form
@@ -65,8 +65,69 @@ class Entry(karacos.db['Resource']):
     def publish(self):
         """
         """
-        karacos.db['WebNode']._publish_node(self)
+        self._publish()
+    @karacos._db.isaction
+    def unpublish(self):
+        """
+        """
+        self._unpublish()
+        
+    @karacos._db.isaction
+    def disallow_comments(self):
+        """
+        """
+        self._disallow_comments()
+        
+    @karacos._db.isaction
+    def allow_comments(self):
+        """
+        """
+        self._allow_comments()
+        
+    @karacos._db.isaction
+    def publish_node(self):
+        """
+        """
+        self._publish()
+    
+    def _disallow_comments(self):
+        """
+        """
+        everyone = 'group.everyone@%s' % self.__domain__['name']
+        self['ACL'][everyone].remove("add_comment")
+        self['comments_allow'] = "false"
+        self.save()
+    
+    def _allow_comments(self):
+        """
+        """
+        everyone = 'group.everyone@%s' % self.__domain__['name']
+        self['ACL'][everyone].append("add_comment")
+        self['comments_allow'] = "true"
+        self.save()
+    
+    def is_comment_allowed(self):
+        if 'comments_allow' in self:
+            return self['comments_allow']
+        else:
+            return "true"
+    
+    def _unpublish(self):
+        """
+        """
+        self['status'] = "unpublished"
+        everyone = 'group.everyone@%s' % self.__domain__['name']
+        self['ACL'][everyone].remove("get_user_actions_forms")
+        self['ACL'][everyone].remove("w_browse")
+        self['ACL'][everyone].remove("index")
+        self['ACL'][everyone].remove("get_comments")
+        self.save()
+        
+    def _publish(self):
+        karacos.db['Resource']._publish_node(self)
         self['status'] = "published"
+        if 'publish_date' not in self:
+            self['publish_date'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         everyone = 'group.everyone@%s' % self.__domain__['name']
         self['ACL'][everyone] = ["get_user_actions_forms","w_browse","index","add_comment","get_comments"]
         self.save()

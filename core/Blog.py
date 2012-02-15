@@ -9,6 +9,7 @@ from email.MIMEImage import MIMEImage
 from uuid import uuid4
 import sys
 import karacos
+import re, datetime
 #from anydbm import result
 json = karacos.json
 class Blog(karacos.db['EntriesHolder']):
@@ -41,7 +42,7 @@ class Blog(karacos.db['EntriesHolder']):
          'submit': _('Ajouter'),
          'fields': [{'name':'name', 'title':_('Nom'),'dataType': 'TEXT'},
                     {'name':'title', 'title':_('Titre'),'dataType': 'TEXT'},
-                    {'name':'message', 'title':_('Message'),'dataType': 'TEXT', 'formType': 'WYSIWYG'},
+                    {'name':'content', 'title':_('Message'),'dataType': 'TEXT', 'formType': 'TEXTAREA'},
                  ] }
         return form
     
@@ -50,8 +51,15 @@ class Blog(karacos.db['EntriesHolder']):
         """
         Create a blog entry
         """
-        self._create_child_node(data=kw,type='Entry',base=False)
-    
+        rx = re.compile('\W+')
+        name = rx.sub('', kw['title']).strip()
+        kw['name'] = "%s-%s" % (datetime.datetime.now().strftime('%Y%m%dT%H%M'),name)
+        entry = self._create_child_node(data=kw,type='Entry',base=False)
+        return {"success": True,
+                "data": {
+                         "name": kw['name'],
+                         "id": entry.id}
+                }
     create_entry.get_form = _get_create_entry_form
     create_entry.label = _("Creer message")
     
@@ -67,20 +75,42 @@ class Blog(karacos.db['EntriesHolder']):
         //
             function(doc) {
              if (doc.parent_id == "%s" && !("_deleted" in doc && doc._deleted == true))
-              if (doc.status == "published") {
-                  emit(doc.name, doc._id);
+              if (doc.status == "published" && doc.publish_date) {
+                  emit(doc.publish_date, doc._id);
                   }
             }
         """
     
     @karacos._db.ViewsProcessor.isview('self','javascript')
-    def __get_public_entries_values__(self):
+    def __get_public_entries_values__(self,*args,**kw):
         """
         //
             function(doc) {
              if (doc.parent_id == "%s" && !("_deleted" in doc && doc._deleted == true))
-              if (doc.status == "published") {
-                  emit(doc.name, doc);
+              if (doc.status == "published" && doc.publish_date) {
+                  emit(doc.publish_date, doc);
+                  }
+            }
+        """
+    @karacos._db.ViewsProcessor.isview('self','javascript')
+    def __get_unpublic_entries__(self,*args,**kw):
+        """
+        //
+            function(doc) {
+             if (doc.parent_id == "%s" && !("_deleted" in doc && doc._deleted == true))
+              if (!(doc.status == "published" && doc.publish_date)) {
+                  emit(doc.creation_date, doc._id);
+                  }
+            }
+        """
+    @karacos._db.ViewsProcessor.isview('self','javascript')
+    def __get_unpublic_entries_values__(self,*args,**kw):
+        """
+        //
+            function(doc) {
+             if (doc.parent_id == "%s" && !("_deleted" in doc && doc._deleted == true))
+              if (!(doc.status == "published" && doc.publish_date)) {
+                  emit(doc.creation_date, doc);
                   }
             }
         """
@@ -108,32 +138,52 @@ class Blog(karacos.db['EntriesHolder']):
             }
         """
     
-    def _get_public_entries(self,number=5):
+    def _get_public_entries(self,*args, **kw):
         result = {}
-        for item in self.__get_public_entries_values__():
-            result[item.value['creation_date']] = self.db[item.value['_id']]
+        for item in self.__get_public_entries_values__(*(), **{'descending':True, "limit": 2}):
+            result[item.value['publish_date']] = self.db[item.value['_id']]
         return result
     
     def _get_editing_entries(self):
         result = {}
         for item in self.__get_editing_entries__():
-            result[item.value['creation_date']] = self.db[item.value['_id']]
+            result[item.value['publish_date']] = self.db[item.value['_id']]
         return result
     
-    def _view_last_entries(self,number=5):
+    def _get_unpublic_entries(self,number=5, first=0):
         result = []
-        for item in self.__get_public_entries__():
+        for item in self.__get_unpublic_entries__(*(), **{'descending':True, "limit": number,"skip": first}):
+            if len(result) <= number:
+                result.append(self.db[item.value])
+        return result
+    
+    def _view_last_entries(self,number=5, first=0):
+        result = []
+        for item in self.__get_public_entries__(*(), **{'descending':True, "limit": number,"skip": first}):
             if len(result) <= number:
                 result.append(self.db[item.value])
         return result
     
     @karacos._db.isaction
-    def view_last_entries(self,number=5):
+    def view_last_entries(self,number=5, first=0):
         """
         Return a list of newsletter subscribers
         """
-        return {'status':'success', 'data':self._get_public_entries(number)}
+        return {"success": True, 'data':self._view_last_entries(number=int(number),first=int(first))}
 
+    @karacos._db.isaction
+    def view_unpublic_entries(self,number=5, first=0):
+        """
+        List of non-public items
+        """
+        return {"success": True, 'data':self._get_unpublic_entries(number=int(number),first=int(first))}
+    
+    @karacos._db.isaction
+    def view_unpublic_entries_values(self,number=5, first=0):
+        """
+        List of non-public items
+        """
+        return {"success": True, 'data':self._get_unpublic_entries(number=int(number),first=int(first))}
     
     def _entry_publish(self,entry):
         """
@@ -203,7 +253,7 @@ class Blog(karacos.db['EntriesHolder']):
         assert isinstance(stylesheets,basestring)
         self['stylesheets'] = karacos.json.loads(stylesheets)
         self.save()
-        return {'status':'success', 'message':_("Contenu modifi&eacute;"),'data':{}}
+        return {"success": True, 'message':_("Contenu modifi&eacute;"),'data':{}}
     edit_content.get_form = _get_edit_resource_content_form
     edit_content.label = _('Modifier la page')
     

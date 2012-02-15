@@ -21,6 +21,7 @@
 		item,
 		actionwindow = KaraCos.actionWindow;
 	if (auth.hasAction('_settings')) {
+		//TODO: extract method, parameters : item,action_url, action_name, form_template_url
 		item = KaraCos('<li><button>Parametrage</button></li>');
 		item.find('button').button().click(
 			function(){

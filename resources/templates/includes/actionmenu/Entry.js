@@ -16,18 +16,14 @@
 
 % if instance != None:
 <% node_actions = instance._get_actions() %>
-(function ResourceSubMenu(submenu){
+(function EntrySubMenu(submenu){
 	var 
 		item,
 		actionwindow = KaraCos.actionWindow;
-	if (auth.hasAction('publish_node')) {
-		item = $('<li><button>Publier</button></li>');
-		item.find('button').button().click(actionsMenu.getActionButtonHandler("${instance._get_action_url()}",'publish_node'));
-		submenu.append(item);
-	}
+
 })(submenu);
 
-<%include file="/includes/actionmenu/WebNode.js"/>
+<%include file="/includes/actionmenu/Resource.js"/>
 % endif
 % except:
 	some errors :
