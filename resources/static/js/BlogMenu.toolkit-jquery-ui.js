@@ -395,8 +395,10 @@ define('menestrel/BlogMenu.toolkit-jquery-ui',
 				}
 				options['params'] = {};
 				entry.find('[property]').each(function(i,e){
-					var $e = $(e);
-					options['params'][$e.attr("property")] = $e.html();
+					var 
+						$e = $(e),
+						editable = Aloha.getEditableById($e.attr("id"));
+					options['params'][$e.attr("property")] = editable.getContents();
 				});
 				
 				karacos.action(options);

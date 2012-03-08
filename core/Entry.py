@@ -129,7 +129,7 @@ class Entry(karacos.db['Resource']):
         if 'publish_date' not in self:
             self['publish_date'] = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         everyone = 'group.everyone@%s' % self.__domain__['name']
-        self['ACL'][everyone] = ["get_user_actions_forms","w_browse","index","add_comment","get_comments"]
+        self['ACL'][everyone] = ["get_user_actions_forms","w_browse","index","_att", "add_comment","get_comments"]
         self.save()
         self.__parent__._entry_publish(self)
         return {'status':'success', 'message':'Message publie'}
