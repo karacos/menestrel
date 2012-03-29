@@ -1,0 +1,16 @@
+.divcarousel {
+	padding: 0.5em;
+	position: absolute;
+	width: 40%;
+	background-color: white;
+	border: 1px solid black;
+	height: 80%;
+	}
+.divcarousel > div {
+	float: left;
+	width: 100%;
+	}
+.divcarousel > h3 {
+	float: left;
+    width: 100%;
+    }  

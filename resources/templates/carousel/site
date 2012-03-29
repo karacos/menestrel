@@ -1,0 +1,108 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<script language="javascript">
+        kc_requireConf = {
+            paths: {
+                "menestrel": "/m_design/js",
+                "karacos": "/_browser/karacos-ui",
+                "fragment": "/fragment"
+            }
+        }
+    </script>
+    
+    <%include file="/includes/karacos_system_header"/>
+    
+    <link rel="stylesheet" href="/m_design/themes/carousel/style.css"> 
+    <link rel="stylesheet" href="/m_design/themes/carousel/custom-theme/jquery-ui-1.8.16.custom.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div id="wrap" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%">
+    <div id="carousel1" style="height: 100%; margin: 0; padding:0">
+        <div class="divcarousel">
+            <h3>Title of item1</h3>
+            <div> <p>Content of item 1</p></div>
+        </div>
+        <div class="divcarousel" item="1">
+            <h3>Title of item2</h3>
+            <div> <p><img style="max-width: 40%" src="/m_design/themes/carousel/Bague.jpg"/>Content of item 2</p></div>
+        </div>
+        <div class="divcarousel">
+            <h3>Title of item3</h3>
+            <div> <p>Content of item 3</p></div>
+        </div>
+        <div class="divcarousel">
+            <h3>Title of item4</h3>
+            <div> <p>Content of item 4</p></div>
+        </div>
+        <div class="divcarousel">
+            <h3>Title of item5</h3>
+            <div> <p>Content of item 5</p></div>
+        </div>
+        <div class="divcarousel">
+            <h3>Title of item6</h3>
+            <div> <p>Content of item 6</p></div>
+        </div>
+            <div class="divcarousel">
+            <h3>Title of item7</h3>
+            <div> <p>Content of item 7</p></div>
+        </div>
+        <div class="divcarousel">
+            <h3>Title of item5-1</h3>
+            <div> <p>Content of item 5</p></div>
+        </div>
+        <div class="divcarousel">
+            <h3>Title of item6 1</h3>
+            <div> <p>Content of item 6</p></div>
+        </div>
+            <div class="divcarousel">
+            <h3>Title of item7 1</h3>
+            <div> <p>Content of item 7</p></div>
+        </div>
+    </div>
+</div>
+<script>
+require(['jquery'], function($) {
+                $(function() {
+                    $('body').bind('kccore', function(){
+                        console.log("site karacos initialization");
+                        KaraCos({ // karacos Initialization for current page
+                            fqdn: '${instance.__domain__['fqdn']}',
+                            page_url: '${instance._get_action_url()}',
+                            page_id: '${instance.id}',
+                            main_content: "#carousel1",
+                            page_base_id: '${instance['parent_db']}',
+                            auth: {
+                            % if 'fb_appId' in instance.__domain__:
+                                facebook: { appId:"${instance.__domain__['fb_appId']}",
+                                        cookie:true, 
+                                        status:true,
+                                        xfbml:true 
+                                    }
+                            % endif
+                                } // en of auth section
+                        }); // End of karacos Initialization
+                    }); // Bind kccore
+                    
+                    $('body').bind('kcui', function(){
+                    KaraCos.activate_aloha(function() {
+                        $('h3, .divcarousel > div').aloha();
+                        });
+                        require(['menestrel/libs/div-carousel-nka', 'menestrel/libs/jquery.mousewheel'], function() {
+                    
+                         $("#carousel1").DivCarousel({           
+                                                xPos: Math.ceil(window.innerWidth/2),
+                                                yPos: 30,
+                                                yRadius: Math.ceil(window.innerHeight/18),
+                                                bringToFront: true,
+                                                mouseWheel: true,
+                                                speed:0.05
+                                            });
+                       });
+                    });
+                });
+            });
+    </script>
+</body>
+</html>
