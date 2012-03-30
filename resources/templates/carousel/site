@@ -86,20 +86,20 @@ require(['jquery'], function($) {
                     }); // Bind kccore
                     
                     $('body').bind('kcui', function(){
-                    KaraCos.activate_aloha(function() {
-                        $('h3, .divcarousel > div').aloha();
-                        });
-                        require(['menestrel/libs/div-carousel-nka', 'menestrel/libs/jquery.mousewheel'], function() {
-                    
-                         $("#carousel1").DivCarousel({           
-                                                xPos: Math.ceil(window.innerWidth/2),
-                                                yPos: 30,
-                                                yRadius: Math.ceil(window.innerHeight/18),
-                                                bringToFront: true,
-                                                mouseWheel: true,
-                                                speed:0.05
-                                            });
-                       });
+                    //KaraCos.activate_aloha(function() {
+                    //    $('h3, .divcarousel > div').aloha();
+                    //});
+                    require(['menestrel/libs/div-carousel-nka', 'menestrel/libs/jquery.mousewheel'], function() {
+                    $('body').css('height',window.screen.availHeight);
+                     $("#carousel1").DivCarousel({           
+                                            xPos: Math.ceil(window.screen.availWidth/2),
+                                            yPos: 30,
+                                            yRadius: Math.ceil(window.screen.availHeight/18),
+                                            bringToFront: true,
+                                            mouseWheel: true,
+                                            speed:0.05
+                                        });
+                   });
                     });
                 });
             });

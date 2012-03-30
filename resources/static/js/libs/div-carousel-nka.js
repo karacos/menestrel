@@ -1,9 +1,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 // Carousel Menu enhanced by nka
 // (c) 2012 by N Karageuzian <http://nka.menestrel.net/>
+// MIT License
 // base code : CloudCarousel V1.0.5
 // CloudCarousel (c) 2011 by R Cecco. <http://www.professorcloud.com>
-// MIT License
 // Reflection code based on plugin by Christophe Beyls <http://www.digitalia.be>
 //
 // Please retain this copyright header in all versions of the software
@@ -339,7 +339,6 @@ define("menestrel/libs/div-carousel-nka",
 			}
 		}; // END updateAll		
 		
-		$('body').css('height',window.innerHeight);
 		//initialize items index
 		for(var i=0;i<elements.length;i++) {	
 			var $elem = $(elements[i]);
