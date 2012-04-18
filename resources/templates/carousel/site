@@ -89,7 +89,7 @@ require(['jquery'], function($) {
                     //KaraCos.activate_aloha(function() {
                     //    $('h3, .divcarousel > div').aloha();
                     //});
-                    require(['menestrel/libs/div-carousel-nka', 'menestrel/libs/jquery.mousewheel'], function() {
+                    require(['menestrel/libs/div-carousel-nka', 'menestrel/libs/jquery.swipe','menestrel/libs/jquery.mousewheel'], function() {
                     $('body').css('height',window.screen.availHeight);
                      $("#carousel1").DivCarousel({           
                                             xPos: Math.ceil(window.screen.availWidth/2),

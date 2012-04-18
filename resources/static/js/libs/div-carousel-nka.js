@@ -157,6 +157,9 @@ define("menestrel/libs/div-carousel-nka",
 					 return false;
 				 });
 		}
+		elements.bind('touchswipe',function(e,args) {
+			
+		});
 		elements.bind('mouseover click',this,function(event){
 			
 			clearInterval(event.data.autoRotateTimer);		// Stop auto rotation if mouse over.
